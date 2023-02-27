@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title=""
+        android:icon="@drawable/menu"
+        app:showAsAction="ifRoom"
+        >
+        <menu>
+            <item
+                android:id="@+id/menu_title"
+                android:title="Hello"
+                android:icon="@drawable/user_logo"
+                app:showAsAction="always"
+                />
+            <item
+                android:id="@+id/edit_Info"
+                android:title="Edit Personal Details"
+                android:icon="@drawable/edit_info"
+                app:showAsAction="always"
+                />
+            <item
+                android:id="@+id/update_password"
+                android:title="Update Password"
+                android:icon="@drawable/update_password"
+                app:showAsAction="always"
+
+                />
+            <item
+                android:id="@+id/delete_account"
+                android:title="Delete Account"
+                android:icon="@drawable/delete_account"
+                app:showAsAction="always"
+                />
+            <item
+                android:id="@+id/signOut"
+                android:title="SignOut"
+                android:icon="@drawable/signout"
+                app:showAsAction="always"
+                />
+        </menu>
+
+    </item>
+
+
+</menu>
