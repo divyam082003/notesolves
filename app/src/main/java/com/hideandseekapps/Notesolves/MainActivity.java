@@ -236,6 +236,9 @@ public class MainActivity extends AppCompatActivity {
         VisibleEmailVerify = false;
         register_laytouts.get(0).setError(null);
         register_laytouts.get(1).setError(null);
+        forgotPasswordEmailLayout.setError(null);
+        verifyEmailLayout.get(0).setError(null);
+        verifyEmailLayout.get(1).setError(null);
         actionBar.hide();
     }
 
@@ -271,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         layouts.get(3).setVisibility(View.GONE);
         layouts.get(2).setVisibility(View.GONE);
         layouts.get(4).setVisibility(View.GONE);
+        verifyEmailInput.get(0).setText(logininput.get(0).getText().toString());
         signin_visible = false;
         signup_visible = false;
         frgt_psswd_visible = true;
@@ -435,6 +439,7 @@ public class MainActivity extends AppCompatActivity {
             clear(registerInput.get(0));
             clear(registerInput.get(1));
             clear(logininput.get(0));clear(logininput.get(1));
+            clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
         }
         else if (frgt_psswd_visible==true){
             setmain();
@@ -443,6 +448,7 @@ public class MainActivity extends AppCompatActivity {
             clear(registerInput.get(0));
             clear(registerInput.get(1));
             clear(logininput.get(0));clear(logininput.get(1));
+            clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
         }
         else if (VisibleEmailVerify==true){
             setmain();
@@ -466,6 +472,7 @@ public class MainActivity extends AppCompatActivity {
                     clear(registerInput.get(0));
                     clear(registerInput.get(1));
                     clear(logininput.get(0));clear(logininput.get(1));
+                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
                 }
                 else if (frgt_psswd_visible==true){
                     setmain();
@@ -474,6 +481,7 @@ public class MainActivity extends AppCompatActivity {
                     clear(registerInput.get(0));
                     clear(registerInput.get(1));
                     clear(logininput.get(0));clear(logininput.get(1));
+                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
                 }
                 else if (VisibleEmailVerify==true){
                     setmain();
@@ -482,6 +490,7 @@ public class MainActivity extends AppCompatActivity {
                     clear(registerInput.get(0));
                     clear(registerInput.get(1));
                     clear(logininput.get(0));clear(logininput.get(1));
+                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
                 }
                 return true;
         }

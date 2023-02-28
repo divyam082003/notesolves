@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/Logo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@mipmap/launcher"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/launcher3"
         android:layout_marginTop="@dimen/normal_text_size"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -25,11 +25,11 @@
         android:textSize="@dimen/text_size_title"
         android:textAlignment="center"
 
-        android:layout_marginTop="@dimen/title_top_margin"
+        android:layout_marginTop="1dp"
         android:layout_marginLeft="@dimen/margin"
         android:layout_marginRight="@dimen/margin"
 
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Logo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
