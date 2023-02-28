@@ -171,10 +171,21 @@ public class webPage extends AppCompatActivity {
                 signOutAlert();
                 break;
             }
+            case (R.id.terms):
+            {
+                setDisclaimer(webPage.this);
+                break;
+            }
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    void setDisclaimer(Context context){
+        Intent intent = new Intent(context,disclaimer.class);
+        startActivity(intent);
     }
 
     void signOut(){

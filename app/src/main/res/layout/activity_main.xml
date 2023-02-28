@@ -105,9 +105,10 @@
 
 
     <TextView
+        android:id="@+id/disclaimer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=" © Divyam Bansal"
+        android:text="@string/Copyright"
         android:textAlignment="center"
 
         android:layout_marginRight="@dimen/margin"

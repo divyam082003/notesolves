@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
     //actionBar
     ActionBar actionBar;
 
+    //disclaimer
+    @BindView(R.id.disclaimer) TextView disclaimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
                 checkCredAction(isCorrect,verifyEmailLayout.get(0),verifyEmailLayout.get(1),
                         (x, y)-> emailVerify(x,y),emailVerify,passwordVerify);
                 keyboar_close(verify_email);
+            }
+        });
+
+        disclaimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDisclaimer(MainActivity.this);
             }
         });
     }
@@ -282,6 +292,10 @@ public class MainActivity extends AppCompatActivity {
         login_laytouts.get(0).setError(null);
         login_laytouts.get(1).setError(null);
         actionBar.show();
+    }
+    void setDisclaimer(Context context){
+        Intent intent = new Intent(context,disclaimer.class);
+        startActivity(intent);
     }
 
 

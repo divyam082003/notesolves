@@ -39,6 +39,12 @@
                 android:icon="@drawable/signout"
                 app:showAsAction="always"
                 />
+            <item
+                android:id="@+id/terms"
+                android:title="Disclaimer"
+                android:icon="@drawable/disclaimer"
+                app:showAsAction="always"
+                />
         </menu>
 
     </item>
