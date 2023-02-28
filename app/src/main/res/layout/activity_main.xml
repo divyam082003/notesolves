@@ -88,6 +88,21 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/l5"
+        android:visibility="gone"
+        android:animationCache="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <include layout="@layout/email_verify"/>
+
+    </FrameLayout>
+
 
     <TextView
         android:layout_width="match_parent"

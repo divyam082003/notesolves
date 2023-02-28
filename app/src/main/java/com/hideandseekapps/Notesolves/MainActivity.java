@@ -1,6 +1,7 @@
 package com.hideandseekapps.Notesolves;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -41,7 +43,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Boolean signup_visible,signin_visible,frgt_psswd_visible = true;
+    private Boolean signup_visible,signin_visible,frgt_psswd_visible,VisibleEmailVerify = true;
     private String registerEmail,registerPassword,loginEmail,loginPassword,forgotPasswordEmail,emailVerify,passwordVerify;
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
@@ -53,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
             R.id.l1,    // unused signUpIn
             R.id.l2,    // login
             R.id.l3,    // register
-            R.id.l4     // resetPassword
+            R.id.l4,    // resetPassword
+            R.id.l5     // emailVerify
     }) List<FrameLayout> layouts;
 
 
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Verify Email
     @BindView(R.id.verify_email) TextView verify_email;
+    @BindViews({R.id.verify_email_head,R.id.verify_email_head2}) List <TextInputLayout> verifyEmailLayout;
+    @BindViews({R.id.verify_email_email,R.id.verify_email_psswd}) List<EditText> verifyEmailInput;
+    @BindView(R.id.verify_email_btn) Button verifyEmailBtn;
 
     //Forgot Password
     @BindView(R.id.frgt_psswd) TextView forgot_psswd;
@@ -79,14 +85,18 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.frgt_psswd_email) EditText forgotPasswordEmailInput;
     @BindView(R.id.frgt_psswd_btn) Button forgot_psswd_btn;
 
+    //actionBar
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        actionBar = getSupportActionBar();
+        actionBar.hide();
 
-        if (getSupportActionBar() != null) getSupportActionBar().hide();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
 
         myauth = FirebaseAuth.getInstance();
@@ -152,10 +162,17 @@ public class MainActivity extends AppCompatActivity {
         verify_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                emailVerify    = logininput.get(0).getText().toString();
-                passwordVerify = logininput.get(1).getText().toString();
+                setEmailVerify();
+            }
+        });
+
+        verifyEmailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emailVerify    = verifyEmailInput.get(0).getText().toString();
+                passwordVerify = verifyEmailInput.get(1).getText().toString();
                 String isCorrect = checkCred(emailVerify,passwordVerify);
-                checkCredAction(isCorrect,login_laytouts.get(0),login_laytouts.get(1),
+                checkCredAction(isCorrect,verifyEmailLayout.get(0),verifyEmailLayout.get(1),
                         (x, y)-> emailVerify(x,y),emailVerify,passwordVerify);
                 keyboar_close(verify_email);
             }
@@ -212,32 +229,57 @@ public class MainActivity extends AppCompatActivity {
         layouts.get(2).setVisibility(View.VISIBLE);
         layouts.get(3).setVisibility(View.GONE);
         layouts.get(4).setVisibility(View.GONE);
+        layouts.get(5).setVisibility(View.GONE);
         signin_visible = true;
         signup_visible = false;
         frgt_psswd_visible = false;
+        VisibleEmailVerify = false;
         register_laytouts.get(0).setError(null);
         register_laytouts.get(1).setError(null);
+        actionBar.hide();
     }
 
     void setRegister(){
         layouts.get(3).setVisibility(View.VISIBLE);
         layouts.get(2).setVisibility(View.GONE);
         layouts.get(4).setVisibility(View.GONE);
+        layouts.get(5).setVisibility(View.GONE);
         signin_visible = false;
         signup_visible = true;
         frgt_psswd_visible = false;
+        VisibleEmailVerify = false;
         login_laytouts.get(0).setError(null);
         login_laytouts.get(1).setError(null);
+        actionBar.show();
     }
 
     void setForgetpassword(){
         layouts.get(4).setVisibility(View.VISIBLE);
         layouts.get(3).setVisibility(View.GONE);
         layouts.get(2).setVisibility(View.GONE);
+        layouts.get(5).setVisibility(View.GONE);
         signin_visible = false;
         signup_visible = false;
         frgt_psswd_visible = true;
+        VisibleEmailVerify = false;
+        login_laytouts.get(0).setError(null);
+        login_laytouts.get(1).setError(null);
+        actionBar.show();
     }
+    void setEmailVerify(){
+        layouts.get(5).setVisibility(View.VISIBLE);
+        layouts.get(3).setVisibility(View.GONE);
+        layouts.get(2).setVisibility(View.GONE);
+        layouts.get(4).setVisibility(View.GONE);
+        signin_visible = false;
+        signup_visible = false;
+        frgt_psswd_visible = true;
+        VisibleEmailVerify = true;
+        login_laytouts.get(0).setError(null);
+        login_laytouts.get(1).setError(null);
+        actionBar.show();
+    }
+
 
     private void register(String email,String psswd){
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()){
@@ -402,9 +444,48 @@ public class MainActivity extends AppCompatActivity {
             clear(registerInput.get(1));
             clear(logininput.get(0));clear(logininput.get(1));
         }
+        else if (VisibleEmailVerify==true){
+            setmain();
+            keyboar_close(back_btn);
+            clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
+            clear(registerInput.get(0));
+            clear(registerInput.get(1));
+            clear(logininput.get(0));clear(logininput.get(1));
+        }
         else{
             super.onBackPressed();
         }
+    }
+
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (signup_visible==true){
+                    setmain();
+                    keyboar_close(back_btn);
+                    clear(registerInput.get(0));
+                    clear(registerInput.get(1));
+                    clear(logininput.get(0));clear(logininput.get(1));
+                }
+                else if (frgt_psswd_visible==true){
+                    setmain();
+                    keyboar_close(back_btn);
+                    clear(forgotPasswordEmailInput);
+                    clear(registerInput.get(0));
+                    clear(registerInput.get(1));
+                    clear(logininput.get(0));clear(logininput.get(1));
+                }
+                else if (VisibleEmailVerify==true){
+                    setmain();
+                    keyboar_close(back_btn);
+                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
+                    clear(registerInput.get(0));
+                    clear(registerInput.get(1));
+                    clear(logininput.get(0));clear(logininput.get(1));
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

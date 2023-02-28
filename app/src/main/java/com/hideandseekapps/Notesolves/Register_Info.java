@@ -1,6 +1,7 @@
 package com.hideandseekapps.Notesolves;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -36,6 +38,7 @@ public class Register_Info extends AppCompatActivity {
 
     DatabaseReference databaseReference;
     String name,phone,college ;
+    ActionBar actionBar;
 
     //Register Info
     @BindViews({R.id.register_name,R.id.register_phn,R.id.register_college}) List<EditText> register_info;
@@ -48,6 +51,10 @@ public class Register_Info extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_info);
         ButterKnife.bind(this);
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("Hello "+name);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         String email   = (String) getIntent().getStringExtra("email");
         String uid   = (String) getIntent().getStringExtra("uid");
@@ -81,6 +88,7 @@ public class Register_Info extends AppCompatActivity {
                     register_info.get(0).setText(name);
                     register_info.get(1).setText(phone);
                     register_info.get(2).setText(college);
+                    actionBar.setTitle("Hello "+name);
                     UserInfo.add(name);
                     UserInfo.add(phone);
                     UserInfo.add(college);
@@ -142,5 +150,14 @@ public class Register_Info extends AppCompatActivity {
         } catch (Exception e) {
             // TODO: handle exception
         }
+    }
+
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
