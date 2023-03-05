@@ -1,105 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity"
-    >
+    tools:context="com.hideandseekapps.Notesolves.MainActivity">
+
 
     <FrameLayout
-        android:visibility="gone"
-        android:id="@+id/l0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="1dp"
-        android:layout_marginLeft="1dp"
-        >
-        <ImageButton
-            android:id="@+id/back_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/back_btn"
-            android:background="@null"
-            />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/l1"
-        android:visibility="gone"
+        android:id="@+id/main_change"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+
+        android:layout_marginTop="0dp"
+
+        app:layout_constraintBottom_toTopOf="@id/adView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         >
 
-        <include layout="@layout/main_activity"/>
+        <FrameLayout
+            android:id="@+id/l0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
-    </FrameLayout>
+            <include layout="@layout/login" />
 
-    <FrameLayout
-        android:id="@+id/l2"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        </FrameLayout>
 
-        <include layout="@layout/login"/>
+        <FrameLayout
+            android:id="@+id/l1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-    </FrameLayout>
+            <include
 
-    <FrameLayout
-        android:id="@+id/l3"
-        android:visibility="gone"
-        android:animationCache="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+                layout="@layout/register" />
 
-       <include layout="@layout/register"/>
+        </FrameLayout>
 
-    </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/l4"
-        android:visibility="gone"
-        android:animationCache="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        <FrameLayout
+            android:id="@+id/l2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-        <include layout="@layout/forogt_password"/>
+            <include
 
-    </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/l5"
-        android:visibility="gone"
-        android:animationCache="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+                layout="@layout/forogt_password" />
 
-        <include layout="@layout/email_verify"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/l3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include
+
+
+                layout="@layout/email_verify" />
+
+        </FrameLayout>
 
     </FrameLayout>
 
@@ -108,15 +78,216 @@
         android:id="@+id/disclaimer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
+
         android:text="@string/Copyright"
         android:textAlignment="center"
 
-        android:layout_marginRight="@dimen/margin"
-        android:layout_marginLeft="@dimen/margin"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+
+        app:layout_constraintBottom_toTopOf="@id/disclaimer"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        />
+
+
+        >
+
+    </com.google.android.gms.ads.AdView>
+
+    <!--    <FrameLayout-->
+    <!--        android:visibility="gone"-->
+    <!--        android:id="@+id/l0"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        android:layout_marginTop="1dp"-->
+    <!--        android:layout_marginLeft="1dp"-->
+    <!--        >-->
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/back_btn"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:src="@drawable/back_btn"-->
+    <!--            android:background="@null"-->
+    <!--            />-->
+    <!--    </FrameLayout>-->
+
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/mainScreen_fix_1"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        >-->
+
+    <!--        <RelativeLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            >-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/Logo"-->
+    <!--                android:layout_width="60dp"-->
+    <!--                android:layout_height="60dp"-->
+    <!--                android:src="@mipmap/launcher3"-->
+    <!--                android:layout_centerHorizontal="true"-->
+
+    <!--                />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/title_login"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="@string/app_name"-->
+    <!--                android:textSize="@dimen/text_size_title"-->
+
+    <!--                android:layout_centerHorizontal="true"-->
+    <!--                android:layout_below="@+id/Logo"-->
+    <!--                />-->
+
+    <!--        </RelativeLayout>-->
+
+    <!--    </FrameLayout>-->
+
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/mainScreen_change"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+
+    <!--        android:layout_margin="@dimen/margin"-->
+
+    <!--        app:layout_constraintTop_toBottomOf="@id/mainScreen_fix_1"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/mainScreen_fix"-->
+    <!--        >-->
+
+    <!--        <FrameLayout-->
+    <!--            android:id="@+id/l1"-->
+    <!--            android:visibility="gone"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            >-->
+
+    <!--            <include-->
+    <!--                layout="@layout/main_activity"/>-->
+
+    <!--        </FrameLayout>-->
+
+    <!--        <FrameLayout-->
+    <!--            android:id="@+id/l2"-->
+    <!--            android:visibility="visible"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            >-->
+
+    <!--            <include layout="@layout/login"/>-->
+
+    <!--        </FrameLayout>-->
+
+    <!--        <FrameLayout-->
+    <!--            android:id="@+id/l3"-->
+    <!--            android:visibility="gone"-->
+    <!--            android:animationCache="true"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            >-->
+
+    <!--            <include layout="@layout/register"/>-->
+
+    <!--        </FrameLayout>-->
+
+    <!--        <FrameLayout-->
+    <!--            android:id="@+id/l4"-->
+    <!--            android:visibility="gone"-->
+    <!--            android:animationCache="true"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            >-->
+
+    <!--            <include layout="@layout/forogt_password"/>-->
+
+    <!--        </FrameLayout>-->
+
+    <!--        <FrameLayout-->
+    <!--            android:id="@+id/l5"-->
+    <!--            android:visibility="gone"-->
+    <!--            android:animationCache="true"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            >-->
+
+    <!--            <include layout="@layout/email_verify"/>-->
+
+    <!--        </FrameLayout>-->
+
+
+    <!--    </FrameLayout>-->
+
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/mainScreen_fix"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+
+    <!--        android:layout_margin="2dp"-->
+
+    <!--        app:layout_constraintTop_toBottomOf="@+id/mainScreen_change"-->
+    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        >-->
+
+    <!--        <RelativeLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent">-->
+
+    <!--            <com.google.android.gms.ads.AdView-->
+    <!--                android:id="@+id/adView"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+
+    <!--                app:adSize="BANNER"-->
+    <!--                app:adUnitId="ca-app-pub-3940256099942544/6300978111"-->
+
+    <!--                android:layout_marginTop="2dp"-->
+    <!--                android:layout_centerHorizontal="true"-->
+    <!--                >-->
+
+    <!--            </com.google.android.gms.ads.AdView>-->
+
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/disclaimer"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:text="@string/Copyright"-->
+    <!--                android:textAlignment="center"-->
+
+    <!--                android:layout_marginRight="@dimen/margin"-->
+    <!--                android:layout_marginLeft="@dimen/margin"-->
+
+    <!--                android:layout_below="@+id/adView"-->
+    <!--                />-->
+
+    <!--        </RelativeLayout>-->
+
+
+    <!--    </FrameLayout>-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

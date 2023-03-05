@@ -1,5 +1,7 @@
 package com.hideandseekapps.Notesolves;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +24,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -51,16 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
     //main activtity frames
     @BindViews({
-            R.id.l0,    // back_btn
-            R.id.l1,    // unused signUpIn
-            R.id.l2,    // login
-            R.id.l3,    // register
-            R.id.l4,    // resetPassword
-            R.id.l5     // emailVerify
+            R.id.l0,    // SignIn
+            R.id.l1,    // Signup
+            R.id.l2,    // frgtPsswd
+            R.id.l3,    // emailVerify
+
     }) List<FrameLayout> layouts;
 
 
-    @BindView(R.id.back_btn) ImageView back_btn;
 
     //register
     @BindView(R.id.register) TextView register;
@@ -88,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
     //actionBar
     ActionBar actionBar;
 
+    //ad
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
+
     //disclaimer
     @BindView(R.id.disclaimer) TextView disclaimer;
 
@@ -95,11 +111,79 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
         actionBar = getSupportActionBar();
         actionBar.hide();
 
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                super.onAdFailedToLoad(adError);
+                mAdView.loadAd(adRequest);
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                super.onAdOpened();
+            }
+        });
+
+        InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+                        Log.i(TAG, "onAdLoaded");
+                    }
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+
+
+
+        ButterKnife.bind(this);
 
 
         myauth = FirebaseAuth.getInstance();
@@ -236,10 +320,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     void setmain(){
-        layouts.get(2).setVisibility(View.VISIBLE);
+        layouts.get(0).setVisibility(View.VISIBLE);
+        layouts.get(1).setVisibility(View.GONE);
+        layouts.get(2).setVisibility(View.GONE);
         layouts.get(3).setVisibility(View.GONE);
-        layouts.get(4).setVisibility(View.GONE);
-        layouts.get(5).setVisibility(View.GONE);
         signin_visible = true;
         signup_visible = false;
         frgt_psswd_visible = false;
@@ -249,41 +333,40 @@ public class MainActivity extends AppCompatActivity {
         forgotPasswordEmailLayout.setError(null);
         verifyEmailLayout.get(0).setError(null);
         verifyEmailLayout.get(1).setError(null);
-        actionBar.hide();
     }
 
     void setRegister(){
-        layouts.get(3).setVisibility(View.VISIBLE);
+        layouts.get(1).setVisibility(View.VISIBLE);
+        layouts.get(0).setVisibility(View.GONE);
         layouts.get(2).setVisibility(View.GONE);
-        layouts.get(4).setVisibility(View.GONE);
-        layouts.get(5).setVisibility(View.GONE);
+        layouts.get(3).setVisibility(View.GONE);
         signin_visible = false;
         signup_visible = true;
         frgt_psswd_visible = false;
         VisibleEmailVerify = false;
         login_laytouts.get(0).setError(null);
         login_laytouts.get(1).setError(null);
-        actionBar.show();
+
     }
 
     void setForgetpassword(){
-        layouts.get(4).setVisibility(View.VISIBLE);
+        layouts.get(2).setVisibility(View.VISIBLE);
+        layouts.get(0).setVisibility(View.GONE);
+        layouts.get(1).setVisibility(View.GONE);
         layouts.get(3).setVisibility(View.GONE);
-        layouts.get(2).setVisibility(View.GONE);
-        layouts.get(5).setVisibility(View.GONE);
         signin_visible = false;
         signup_visible = false;
         frgt_psswd_visible = true;
         VisibleEmailVerify = false;
         login_laytouts.get(0).setError(null);
         login_laytouts.get(1).setError(null);
-        actionBar.show();
+
     }
     void setEmailVerify(){
-        layouts.get(5).setVisibility(View.VISIBLE);
-        layouts.get(3).setVisibility(View.GONE);
+        layouts.get(3).setVisibility(View.VISIBLE);
+        layouts.get(0).setVisibility(View.GONE);
+        layouts.get(1).setVisibility(View.GONE);
         layouts.get(2).setVisibility(View.GONE);
-        layouts.get(4).setVisibility(View.GONE);
         verifyEmailInput.get(0).setText(logininput.get(0).getText().toString());
         signin_visible = false;
         signup_visible = false;
@@ -291,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
         VisibleEmailVerify = true;
         login_laytouts.get(0).setError(null);
         login_laytouts.get(1).setError(null);
-        actionBar.show();
+
     }
     void setDisclaimer(Context context){
         Intent intent = new Intent(context,disclaimer.class);
@@ -366,6 +449,11 @@ public class MainActivity extends AppCompatActivity {
                     login_laytouts.get(0).setError(null);
                     login_laytouts.get(1).setError(null);
                     intentCall(MainActivity.this,webPage.class,email,s);
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd.show(MainActivity.this);
+                    } else {
+                        Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                    }
                     finish();
                 }
                 else {
@@ -449,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (signup_visible==true){
             setmain();
-            keyboar_close(back_btn);
+
             clear(registerInput.get(0));
             clear(registerInput.get(1));
             clear(logininput.get(0));clear(logininput.get(1));
@@ -457,7 +545,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (frgt_psswd_visible==true){
             setmain();
-            keyboar_close(back_btn);
+
             clear(forgotPasswordEmailInput);
             clear(registerInput.get(0));
             clear(registerInput.get(1));
@@ -466,7 +554,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (VisibleEmailVerify==true){
             setmain();
-            keyboar_close(back_btn);
             clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
             clear(registerInput.get(0));
             clear(registerInput.get(1));
@@ -477,39 +564,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                if (signup_visible==true){
-                    setmain();
-                    keyboar_close(back_btn);
-                    clear(registerInput.get(0));
-                    clear(registerInput.get(1));
-                    clear(logininput.get(0));clear(logininput.get(1));
-                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
-                }
-                else if (frgt_psswd_visible==true){
-                    setmain();
-                    keyboar_close(back_btn);
-                    clear(forgotPasswordEmailInput);
-                    clear(registerInput.get(0));
-                    clear(registerInput.get(1));
-                    clear(logininput.get(0));clear(logininput.get(1));
-                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
-                }
-                else if (VisibleEmailVerify==true){
-                    setmain();
-                    keyboar_close(back_btn);
-                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
-                    clear(registerInput.get(0));
-                    clear(registerInput.get(1));
-                    clear(logininput.get(0));clear(logininput.get(1));
-                    clear(verifyEmailInput.get(0));clear(verifyEmailInput.get(1));
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
     @Override
     protected void onStart() {

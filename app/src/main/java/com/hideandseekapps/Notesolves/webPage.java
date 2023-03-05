@@ -1,5 +1,7 @@
 package com.hideandseekapps.Notesolves;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +15,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +29,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -57,10 +71,57 @@ public class webPage extends AppCompatActivity {
     ActionBar actionBar;
     final static String URL_NOTESOLVES = "https://notesolves.hideandseekapps.com";
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_page);
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                super.onAdFailedToLoad(adError);
+                mAdView.loadAd(adRequest);
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                super.onAdOpened();
+            }
+        });
+
         ButterKnife.bind(this);
         actionBar = getSupportActionBar();
 
@@ -151,6 +212,11 @@ public class webPage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case (R.id.menu_title):
+            {
+                setProfile(uid,webPage.this);
+                break;
+            }
             case (R.id.edit_Info):
             {
                 editInfo(uid);
@@ -180,6 +246,17 @@ public class webPage extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setProfile(String uid,Context context) {
+        if (uid.isEmpty()){
+            Toast.makeText(this, "No User Exists", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Intent intent = new Intent(context,userProfile.class);
+            intent.putExtra("uid",uid);
+            startActivity(intent);
+        }
     }
 
 
@@ -281,7 +358,7 @@ public class webPage extends AppCompatActivity {
     void deleteAlert(){
         AlertDialog.Builder builder = new AlertDialog.Builder(webPage.this);
         builder.setTitle("Delete Account");
-        builder.setMessage("Are you sure you want to Delete Account");
+        builder.setMessage("Are you sure you want to Delete your Account");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -378,8 +455,10 @@ public class webPage extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             actionBar.hide();
+            mAdView.setVisibility(View.GONE);
         }
         else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mAdView.setVisibility(View.VISIBLE);
             actionBar.show();
         }
     }

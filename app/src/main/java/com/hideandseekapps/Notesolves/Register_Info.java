@@ -1,5 +1,7 @@
 package com.hideandseekapps.Notesolves;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,10 +53,35 @@ public class Register_Info extends AppCompatActivity {
 
     @BindView(R.id.info_submit) Button submit;
 
+    //ad
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_info);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+        
+
         ButterKnife.bind(this);
         actionBar = getSupportActionBar();
         actionBar.setTitle("Hello "+name);
@@ -132,6 +164,13 @@ public class Register_Info extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void unused) {
                             Toast.makeText(Register_Info.this, "Data Saved", Toast.LENGTH_SHORT).show();
+
+                            if (mInterstitialAd != null) {
+                                mInterstitialAd.show(Register_Info.this);
+                            } else {
+                                Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                            }
+
                             finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -155,9 +194,26 @@ public class Register_Info extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                if (mInterstitialAd != null) {
+                    mInterstitialAd.show(Register_Info.this);
+                } else {
+                    Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                }
                 this.finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(Register_Info.this);
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+        }
+
+        super.onBackPressed();
     }
 }

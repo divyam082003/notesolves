@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">@Notesolves</string>
+    <string name="app_name">NoteSolves</string>
     <string name="title">SignIn</string>
-    <string name="register">SignUp</string>
-    <string name="login">SignIn</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
     <string name="username_hint">Email</string>
     <string name="passwd_hint">Password</string>
     <string name="name">Full Name</string>
@@ -17,7 +17,7 @@
     <string name="enter_old_password">Enter Old Password</string>
     <string name="college_name">College Name</string>
 
-<!--    Copyright and Disclaimer-->
+    <!--    Copyright and Disclaimer-->
     <string name="Copyright">© HIDE AND SEEK APPS DISCLAIMER
     </string>
     <string name="Disclaimer">  \n
@@ -41,5 +41,6 @@
         CONTACT US\n\n
         Should you have any feedback, comments, requests for technical support or other inquiries, please contact us by email: notessolves@gmail.com.\n
     </string>
+    <string name="user_profile_title">User Profile</string>
 
 </resources>
