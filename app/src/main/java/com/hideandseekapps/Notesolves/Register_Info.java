@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
@@ -92,6 +95,51 @@ public class Register_Info extends AppCompatActivity {
         String uid   = (String) getIntent().getStringExtra("uid");
 
         List <String> userinfo = getinfo(uid);
+
+
+        //Info submit
+        register_info.get(0).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //do something
+                    String name1 = register_info.get(0).getText().toString();
+                    String phn1 = register_info.get(1).getText().toString();
+                    String college1 = register_info.get(2).getText().toString();
+                    checkData(uid,email,name1,phn1,college1,userinfo);
+                }
+                return false;
+            }
+        });
+
+        register_info.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //do something
+                    String name1 = register_info.get(0).getText().toString();
+                    String phn1 = register_info.get(1).getText().toString();
+                    String college1 = register_info.get(2).getText().toString();
+                    checkData(uid,email,name1,phn1,college1,userinfo);
+                }
+                return false;
+            }
+        });
+
+        register_info.get(2).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //do something
+                    String name1 = register_info.get(0).getText().toString();
+                    String phn1 = register_info.get(1).getText().toString();
+                    String college1 = register_info.get(2).getText().toString();
+                    checkData(uid,email,name1,phn1,college1,userinfo);
+                }
+                return false;
+            }
+        });
+
 
 
         submit.setOnClickListener(new View.OnClickListener() {

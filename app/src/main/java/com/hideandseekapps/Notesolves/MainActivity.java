@@ -15,8 +15,11 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -114,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         actionBar = getSupportActionBar();
         actionBar.hide();
@@ -196,11 +200,29 @@ public class MainActivity extends AppCompatActivity {
         myauth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
 
+
+        //Register Work
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                setRegister();
                keyboar_close(register);
+            }
+        });
+
+
+        registerInput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    registerEmail = registerInput.get(0).getText().toString();
+                    registerPassword = registerInput.get(1).getText().toString();
+                    String isCorrect = checkCred(registerEmail,registerPassword);
+                    checkCredAction(isCorrect,register_laytouts.get(0),register_laytouts.get(1),
+                            (x, y)-> register(x,y),registerEmail,registerPassword);
+                    keyboar_close(register_btn);
+                }
+                return false;
             }
         });
 
@@ -214,6 +236,27 @@ public class MainActivity extends AppCompatActivity {
                 checkCredAction(isCorrect,register_laytouts.get(0),register_laytouts.get(1),
                         (x, y)-> register(x,y),registerEmail,registerPassword);
                 keyboar_close(register_btn);
+            }
+        });
+
+
+        // login Work
+        logininput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //do something
+                    loginEmail = logininput.get(0).getText().toString();
+                    loginPassword = logininput.get(1).getText().toString();
+
+                    String isCorrect = checkCred(loginEmail,loginPassword);
+                    checkCredAction(isCorrect,login_laytouts.get(0),login_laytouts.get(1),
+                            (x, y)-> login(x,y),loginEmail,loginPassword);
+
+                    clear(logininput.get(1));
+                    keyboar_close(login_btn);
+                }
+                return false;
             }
         });
 
@@ -233,12 +276,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Forgot password work
+
         forgot_psswd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setForgetpassword();
             }
         });
+
+        forgotPasswordEmailInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //do something
+                    forgotPasswordEmail = forgotPasswordEmailInput.getText().toString();
+                    String isCorrect = checkCred(forgotPasswordEmail);
+                    checkCredAction(isCorrect,forgotPasswordEmailLayout,forgotPasswordEmailLayout,
+                            (x, y)-> resetPassword(x,y),forgotPasswordEmail,forgotPasswordEmail);
+
+                    clear(forgotPasswordEmailInput);
+                    keyboar_close(forgot_psswd_btn);
+                }
+                return false;
+            }
+        });
+
 
         forgot_psswd_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,10 +316,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //email verify
+
         verify_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setEmailVerify();
+            }
+        });
+
+        verifyEmailInput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    //do something
+                    emailVerify    = verifyEmailInput.get(0).getText().toString();
+                    passwordVerify = verifyEmailInput.get(1).getText().toString();
+                    String isCorrect = checkCred(emailVerify,passwordVerify);
+                    checkCredAction(isCorrect,verifyEmailLayout.get(0),verifyEmailLayout.get(1),
+                            (x, y)-> emailVerify(x,y),emailVerify,passwordVerify);
+                    keyboar_close(verify_email);
+                }
+                return false;
             }
         });
 
