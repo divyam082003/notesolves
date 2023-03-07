@@ -73,6 +73,8 @@ public class webPage extends AppCompatActivity {
 
     private AdView mAdView;
 
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +83,30 @@ public class webPage extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+                        Log.i(TAG, "onAdLoaded");
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(webPage.this);
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+        }
 
         mAdView.setAdListener(new AdListener() {
             @Override
@@ -173,8 +199,6 @@ public class webPage extends AppCompatActivity {
                 if (obj != null){
                     name = obj.name;
                     actionBar.setSubtitle("Welcome "+ name);
-                    item = menu.findItem(R.id.menu_title);
-                    item.setTitle("Hello "+name);
                 }
             }
             @Override
@@ -201,13 +225,6 @@ public class webPage extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        this.menu=menu;
-        item = menu.findItem(R.id.menu_title);
-        item.setTitle("Hello "+name);
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -456,10 +473,12 @@ public class webPage extends AppCompatActivity {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             actionBar.hide();
             mAdView.setVisibility(View.GONE);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             mAdView.setVisibility(View.VISIBLE);
             actionBar.show();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 }

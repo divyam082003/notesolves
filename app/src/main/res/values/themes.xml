@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
-    <style name="Theme.Firebase_tut" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="Theme.NoteSolves" parent="Theme.MaterialComponents.Light.DarkActionBar">
 
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
@@ -15,6 +16,8 @@
         <!-- Customize your theme here. -->
         <item name="android:windowNoTitle">true</item>   <!-- //this -->
     </style>
+
+
 
     <style name="generalnotitle" parent="Theme.AppCompat.Light" >
         <!-- Primary brand color. -->

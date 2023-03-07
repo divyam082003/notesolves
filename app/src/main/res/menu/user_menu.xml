@@ -10,7 +10,7 @@
         <menu>
             <item
                 android:id="@+id/menu_title"
-                android:title="Hello"
+                android:title="User Profile"
                 android:icon="@drawable/user_logo"
                 app:showAsAction="always"
                 />
@@ -35,7 +35,7 @@
                 />
             <item
                 android:id="@+id/signOut"
-                android:title="SignOut"
+                android:title="LogOut"
                 android:icon="@drawable/signout"
                 app:showAsAction="always"
                 />
