@@ -37,7 +37,33 @@
 <!--        android:textSize="18sp"-->
 <!--        />-->
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/d"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        android:layout_margin="@dimen/margin"
 
+        app:layout_constraintTop_toBottomOf="@+id/title_register"
+        app:layout_constraintLeft_toLeftOf="@id/title_register"
+        app:layout_constraintRight_toRightOf="@id/title_register"
+
+
+        app:startIconDrawable="@drawable/user_logo"
+        android:textColorHint="@color/primary"
+        app:startIconTint="@color/primary"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:background="@color/white"
+
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/d0"
@@ -46,7 +72,7 @@
         android:hint="@string/username_hint"
         android:layout_margin="@dimen/margin"
 
-        app:layout_constraintTop_toBottomOf="@+id/title_register"
+        app:layout_constraintTop_toBottomOf="@+id/d"
         app:layout_constraintLeft_toLeftOf="@id/title_register"
         app:layout_constraintRight_toRightOf="@id/title_register"
 

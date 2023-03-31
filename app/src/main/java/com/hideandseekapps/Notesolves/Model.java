@@ -2,11 +2,11 @@ package com.hideandseekapps.Notesolves;
 
 public class Model {
 
-    String email;
-    String name;
-    String phone;
-    String college;
-    Boolean active;
+  public String phone;
+  public String email;
+  public String name;
+  public String college;
+  public Boolean active;
 
     public Model() {
     }

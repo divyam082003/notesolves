@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -58,10 +60,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
-
-    @BindView(R.id.webtext) TextView webText;
     @BindView(R.id.webView) WebView webView;
-    @BindView(R.id.pg) ProgressBar pg;
+
 
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
@@ -178,13 +178,11 @@ public class webPage extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                pg.setVisibility(View.VISIBLE);
                 super.onPageStarted(view, url, favicon);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                pg.setVisibility(View.GONE);
                 super.onPageFinished(view, url);
             }
         });
@@ -254,9 +252,9 @@ public class webPage extends AppCompatActivity {
                 signOutAlert();
                 break;
             }
-            case (R.id.terms):
+            case (R.id.Policy):
             {
-                setDisclaimer(webPage.this);
+                setPolicy(webPage.this);
                 break;
             }
             default:
@@ -277,8 +275,8 @@ public class webPage extends AppCompatActivity {
     }
 
 
-    void setDisclaimer(Context context){
-        Intent intent = new Intent(context,disclaimer.class);
+    void setPolicy(Context context){
+        Intent intent = new Intent(context,privacyPolicy.class);
         startActivity(intent);
     }
 

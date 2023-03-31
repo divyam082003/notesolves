@@ -40,9 +40,9 @@
                 app:showAsAction="always"
                 />
             <item
-                android:id="@+id/terms"
-                android:title="Disclaimer"
-                android:icon="@drawable/disclaimer"
+                android:id="@+id/Policy"
+                android:title="@string/PrivacyPolicy"
+                android:icon="@drawable/privacy"
                 app:showAsAction="always"
                 />
         </menu>
