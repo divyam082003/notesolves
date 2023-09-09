@@ -26,6 +26,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.common.util.ArrayUtils;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.UserInfo;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,6 +49,8 @@ import butterknife.ButterKnife;
 
 public class Register_Info extends AppCompatActivity {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     DatabaseReference databaseReference;
     String name,phone,college ;
     ActionBar actionBar;
@@ -58,6 +63,7 @@ public class Register_Info extends AppCompatActivity {
 
     //ad
     private InterstitialAd mInterstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,7 @@ public class Register_Info extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setTitle("Hello "+name);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 
         String email   = (String) getIntent().getStringExtra("email");
@@ -149,8 +156,27 @@ public class Register_Info extends AppCompatActivity {
                 String phn1 = register_info.get(1).getText().toString();
                 String college1 = register_info.get(2).getText().toString();
                 checkData(uid,email,name1,phn1,college1,userinfo);
+
+                ArrayList<String> GaEditParams = new ArrayList<>();
+
+                if (!(userinfo.get(0).equalsIgnoreCase(name1))){
+                    GaEditParams.add("full_name");
+                }
+                if (!(userinfo.get(1).equalsIgnoreCase(phn1))){
+                    GaEditParams.add("phone_number");
+                }
+                if (!(userinfo.get(2).equalsIgnoreCase(college1))){
+                    GaEditParams.add("college");
+                }
+
+                Bundle params = new Bundle();
+                params.putStringArrayList(GAManager.edited_field, GaEditParams);
+                GAManager.logEvent(Register_Info.this,GAManager.edit_profile,params);
             }
         });
+
+
+
 
     }
 
@@ -213,6 +239,8 @@ public class Register_Info extends AppCompatActivity {
                         public void onSuccess(Void unused) {
                             Toast.makeText(Register_Info.this, "Data Saved", Toast.LENGTH_SHORT).show();
 
+
+
                             if (mInterstitialAd != null) {
                                 mInterstitialAd.show(Register_Info.this);
                             } else {
@@ -263,5 +291,13 @@ public class Register_Info extends AppCompatActivity {
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"RegisterInfo");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
 }

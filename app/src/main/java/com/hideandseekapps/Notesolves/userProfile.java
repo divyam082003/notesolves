@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +23,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class userProfile extends AppCompatActivity {
+
+
     String uid,name,email,phn,cllg;
     DatabaseReference databaseReference;
 
@@ -43,6 +46,8 @@ public class userProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
+
+
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -84,5 +89,13 @@ public class userProfile extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"UserProfile");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
 }
