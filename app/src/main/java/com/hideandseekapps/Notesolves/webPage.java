@@ -42,6 +42,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -60,6 +61,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+
     @BindView(R.id.webView) WebView webView;
 
 
@@ -83,6 +87,9 @@ public class webPage extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
                 new InterstitialAdLoadCallback() {
@@ -226,38 +233,54 @@ public class webPage extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        Bundle bundle = new Bundle();
         switch (item.getItemId()){
             case (R.id.menu_title):
             {
                 setProfile(uid,webPage.this);
+                bundle.putString(GAManager.menu_item_name,"User Profile");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
             case (R.id.edit_Info):
             {
                 editInfo(uid);
+                bundle.putString(GAManager.menu_item_name,"Edit Personal Details");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
             case (R.id.update_password):
             {
                 updatePassword();
+                bundle.putString(GAManager.menu_item_name,"Update Password");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
             case (R.id.delete_account):
             {
                 deleteAlert();
+                bundle.putString(GAManager.menu_item_name,"Delete Account");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
             case (R.id.signOut):
             {
                 signOutAlert();
+                bundle.putString(GAManager.menu_item_name,"LogOut");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
             case (R.id.Policy):
             {
                 setPolicy(webPage.this);
+                bundle.putString(GAManager.menu_item_name,"Privacy Policy");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
             default:
+                Bundle bundle1 = new Bundle();
+                GAManager.logEvent(this,GAManager.menu_click,bundle1);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -294,6 +317,7 @@ public class webPage extends AppCompatActivity {
     }
 
     void signOutAlert(){
+        Bundle params = new Bundle();
         AlertDialog.Builder builder = new AlertDialog.Builder(webPage.this);
         builder.setTitle("SignOut");
         builder.setMessage("Are you sure you want to SignOut");
@@ -301,12 +325,14 @@ public class webPage extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 signOut();
+                GAManager.logEvent(webPage.this,GAManager.singOut_yes,params);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+                GAManager.logEvent(webPage.this,GAManager.signOut_no,params);
             }
         });
         builder.show();
@@ -371,6 +397,7 @@ public class webPage extends AppCompatActivity {
     }
 
     void deleteAlert(){
+        Bundle params = new Bundle();
         AlertDialog.Builder builder = new AlertDialog.Builder(webPage.this);
         builder.setTitle("Delete Account");
         builder.setMessage("Are you sure you want to Delete your Account");
@@ -378,12 +405,14 @@ public class webPage extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteAccount();
+                GAManager.logEvent(webPage.this,GAManager.delete_account_yes,params);
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+                GAManager.logEvent(webPage.this,GAManager.delete_account_no,params);
             }
         });
         builder.show();
@@ -463,6 +492,9 @@ public class webPage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setInfo(uid);
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"WebPage");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
 
     @Override

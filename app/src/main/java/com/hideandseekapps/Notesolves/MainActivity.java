@@ -36,6 +36,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     private String registerName, registerEmail, registerPassword, loginEmail, loginPassword, forgotPasswordEmail, emailVerify, passwordVerify;
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     private static final String REGISTER = "REGISTER";
     private static final String LOGIN = "LOGIN";
@@ -215,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
         myauth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
 
         //privacy
@@ -223,6 +228,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, privacyPolicy.class);
                 startActivity(intent);
+
+                Bundle params = new Bundle();
+                GAManager.logEvent(MainActivity.this,GAManager.loginPge_privacy_click,params);
             }
         });
 
@@ -232,6 +240,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setRegister();
+
+                //GA
+                Bundle params = new Bundle();
+                GAManager.logEvent(MainActivity.this,GAManager.register_button_click,params);
+
+
                 keyboar_close(register);
             }
         });
@@ -260,6 +274,9 @@ public class MainActivity extends AppCompatActivity {
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
                 registerName = registerInput.get(2).getText().toString();
                 registerEmail = registerInput.get(0).getText().toString();
                 registerPassword = registerInput.get(1).getText().toString();
@@ -314,6 +331,11 @@ public class MainActivity extends AppCompatActivity {
         forgot_psswd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //GA
+                Bundle params = new Bundle();
+                GAManager.logEvent(MainActivity.this,GAManager.forgot_password_btn,params);
+
                 setForgetpassword();
             }
         });
@@ -353,6 +375,10 @@ public class MainActivity extends AppCompatActivity {
         verify_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Bundle params = new Bundle();
+                GAManager.logEvent(MainActivity.this,GAManager.verify_email_click,params);
+
                 setEmailVerify();
             }
         });
@@ -380,6 +406,9 @@ public class MainActivity extends AppCompatActivity {
                 String isCorrect = checkCred(emailVerify, passwordVerify);
                 checkCredAction(isCorrect, verifyEmailLayout.get(0), verifyEmailLayout.get(1), VERIFY_EMAIL, emailVerify, passwordVerify, emailVerify);
                 keyboar_close(verify_email);
+
+                Bundle params = new Bundle();
+                GAManager.logEvent(MainActivity.this,"verify_email_click_btn",params);
             }
         });
 
@@ -500,10 +529,15 @@ public class MainActivity extends AppCompatActivity {
     void setDisclaimer(Context context) {
         Intent intent = new Intent(context, disclaimer.class);
         startActivity(intent);
+
+        Bundle params = new Bundle();
+        GAManager.logEvent(this,GAManager.loginPge_disclaimer_click,params);
+
     }
 
 
     private void register(String email, String psswd, String registerName) {
+        Bundle params = new Bundle();
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             myauth.createUserWithEmailAndPassword(email, psswd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -511,6 +545,10 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 FirebaseUser firebaseUser = myauth.getCurrentUser();
                                 Toast.makeText(MainActivity.this, "Registered Successfully", Toast.LENGTH_SHORT).show();
+
+                                //Google Analytics
+                                GAManager.logEvent(MainActivity.this,GAManager.registration_success,params);
+
                                 firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -542,6 +580,9 @@ public class MainActivity extends AppCompatActivity {
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+
+                            GAManager.logEvent(MainActivity.this,GAManager.register_fail,params);
+
                             Toast.makeText(MainActivity.this, "Failed\n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -554,9 +595,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void login(String email, String psswd) {
+        Bundle params = new Bundle();
         myauth.signInWithEmailAndPassword(email, psswd).addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+
+                        //GA
+                        GAManager.logEvent(MainActivity.this,GAManager.login_success,params);
+
                         FirebaseUser firebaseUser = myauth.getCurrentUser();
                         if (firebaseUser.isEmailVerified()) {
                             String s = firebaseUser.getUid();
@@ -584,6 +630,10 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(this, new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+
+                        //GA
+                        GAManager.logEvent(MainActivity.this,GAManager.login_fail,params);
+
                         Toast.makeText(MainActivity.this, "Failed \n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -701,5 +751,8 @@ public class MainActivity extends AppCompatActivity {
             intentCall(MainActivity.this, webPage.class, email, uid);
             finish();
         }
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"LoginScreen");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
 }

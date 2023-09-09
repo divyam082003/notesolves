@@ -5,15 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hideandseekapps.firebase_tut.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class privacyPolicy extends AppCompatActivity {
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     ActionBar actionBar;
 
@@ -30,6 +34,8 @@ public class privacyPolicy extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.hide();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         adjustWebview(privacyWebView);
         loadWebView(privacyWebView,URL_PRIVACY);
@@ -61,5 +67,13 @@ public class privacyPolicy extends AppCompatActivity {
         webView.getSettings().setDisplayZoomControls(false);
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"PrivacyPolicy");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
 }
