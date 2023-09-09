@@ -35,7 +35,6 @@ public class privacyPolicy extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.hide();
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         adjustWebview(privacyWebView);
         loadWebView(privacyWebView,URL_PRIVACY);

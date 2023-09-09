@@ -407,8 +407,6 @@ public class MainActivity extends AppCompatActivity {
                 checkCredAction(isCorrect, verifyEmailLayout.get(0), verifyEmailLayout.get(1), VERIFY_EMAIL, emailVerify, passwordVerify, emailVerify);
                 keyboar_close(verify_email);
 
-                Bundle params = new Bundle();
-                GAManager.logEvent(MainActivity.this,"verify_email_click_btn",params);
             }
         });
 

@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 
 public class userProfile extends AppCompatActivity {
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+
     String uid,name,email,phn,cllg;
     DatabaseReference databaseReference;
 
@@ -47,7 +47,7 @@ public class userProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

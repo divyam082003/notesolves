@@ -61,7 +61,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
-    private FirebaseAnalytics mFirebaseAnalytics;
 
 
     @BindView(R.id.webView) WebView webView;
@@ -88,7 +87,7 @@ public class webPage extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
 
         InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
@@ -161,7 +160,7 @@ public class webPage extends AppCompatActivity {
         adjustWebview(webView);
         loadWebView(webView);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+
 
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
