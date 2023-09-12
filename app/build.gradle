@@ -12,7 +12,7 @@ android {
         applicationId "com.hideandseekapps.firebase_tut"
         minSdk 24
         targetSdk 33
-        versionCode 8
+        versionCode 9
         versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
