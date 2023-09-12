@@ -45,6 +45,12 @@
                 android:icon="@drawable/privacy"
                 app:showAsAction="always"
                 />
+            <item
+                android:id="@+id/Share"
+                android:title="Share with Friend"
+                android:icon="@drawable/share_icon"
+                app:showAsAction="always"
+                />
         </menu>
 
     </item>

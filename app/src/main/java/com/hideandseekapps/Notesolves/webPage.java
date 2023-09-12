@@ -277,12 +277,27 @@ public class webPage extends AppCompatActivity {
                 GAManager.logEvent(this,GAManager.menu_item_click,bundle);
                 break;
             }
+            case (R.id.Share):
+            {
+                shareWithFriend(webPage.this);
+                bundle.putString(GAManager.menu_item_name,"Share with Friend");
+                GAManager.logEvent(this,GAManager.menu_item_click,bundle);
+                break;
+            }
             default:
                 Bundle bundle1 = new Bundle();
                 GAManager.logEvent(this,GAManager.menu_click,bundle1);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareWithFriend(webPage webPage) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,getString(R.string.share_with_friends));
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent,"Share Via"));
     }
 
     private void setProfile(String uid,Context context) {
