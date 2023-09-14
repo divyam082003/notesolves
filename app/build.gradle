@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace 'com.hideandseekapps.firebase_tut'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.hideandseekapps.firebase_tut"
         minSdk 24
-        targetSdk 32
-        versionCode 7
-        versionName "2"
+        targetSdk 33
+        versionCode 9
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
