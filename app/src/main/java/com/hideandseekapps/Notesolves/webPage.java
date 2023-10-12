@@ -3,22 +3,17 @@ package com.hideandseekapps.Notesolves;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,8 +21,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -35,27 +28,18 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -171,12 +155,6 @@ public class webPage extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
-        int result = rateUs.isFirstRun(webPage.this);
-        if (result==2){
-            rateUs();
-            Bundle bundle1 = new Bundle();
-            GAManager.logEvent(this,GAManager.show_rating_popup,bundle1);
-        }
     }
 
     void adjustWebview(WebView webView){
@@ -499,7 +477,7 @@ public class webPage extends AppCompatActivity {
     }
 
 
-    void rateUs(){
+    void showRatingPopup(){
         TextView later, no , rate;
         AlertDialog.Builder builder = new AlertDialog.Builder(this, androidx.appcompat.R.style.Base_Theme_AppCompat_Light_DialogWhenLarge);
         LayoutInflater inflater = getLayoutInflater();
@@ -545,6 +523,8 @@ public class webPage extends AppCompatActivity {
                 GAManager.logEvent(webPage.this,GAManager.popup_rate_now_click,bundle1);
             }
         });
+        Bundle bundle1 = new Bundle();
+        GAManager.logEvent(this,GAManager.show_rating_popup,bundle1);
         dialog.show();
     }
 
@@ -563,7 +543,7 @@ public class webPage extends AppCompatActivity {
         v.setText("");
     }
 
-    //OnStrart
+    //OnStart
     @Override
     protected void onStart() {
         super.onStart();
@@ -571,6 +551,9 @@ public class webPage extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putString(GAManager.activity_name,"WebPage");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
+        if (rateUs.isShowRatePopup(webPage.this)){
+            showRatingPopup();
+        }
     }
 
     @Override
