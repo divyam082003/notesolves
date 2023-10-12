@@ -72,7 +72,7 @@ public class webPage extends AppCompatActivity {
     Menu menu;
     MenuItem item;
     ActionBar actionBar;
-    final static String URL_NOTESOLVES = "https://notesolves.hideandseekapps.com";
+    final static String URL_NOTESOLVES = "https://nswebview.hideandseekapps.com";
 
     private AdView mAdView;
 
@@ -87,6 +87,8 @@ public class webPage extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         firebaseAuth = FirebaseAuth.getInstance();
+
+
 
 
 
