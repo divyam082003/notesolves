@@ -81,17 +81,13 @@ public class webPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_web_page);
 
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         firebaseAuth = FirebaseAuth.getInstance();
-
-
-
-
-
 
         InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
                 new InterstitialAdLoadCallback() {
