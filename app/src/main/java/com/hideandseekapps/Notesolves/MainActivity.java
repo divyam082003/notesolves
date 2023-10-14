@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -118,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
     EditText forgotPasswordEmailInput;
     @BindView(R.id.frgt_psswd_btn)
     Button forgot_psswd_btn;
+    TextView text;
+    View layout;
 
     //actionBar
     ActionBar actionBar;
@@ -222,7 +225,9 @@ public class MainActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-
+        LayoutInflater inflater = getLayoutInflater();
+        layout = inflater.inflate(R.layout.custom_toast_layout, findViewById(R.id.toast_message));
+        text = layout.findViewById(R.id.toast_message);
 
         //privacy
         privacy.setOnClickListener(new View.OnClickListener() {
@@ -582,8 +587,11 @@ public class MainActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
 
                             GAManager.logEvent(MainActivity.this,GAManager.register_fail,params);
-
-                            Toast.makeText(MainActivity.this, "Failed\n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            text.setText(e.getLocalizedMessage());
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
+                            toast.setView(layout); // Set the custom layout
+                            toast.show();
                         }
                     });
         } else {
@@ -633,8 +641,13 @@ public class MainActivity extends AppCompatActivity {
 
                         //GA
                         GAManager.logEvent(MainActivity.this,GAManager.login_fail,params);
+                        text.setText(e.getLocalizedMessage());
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
+                        toast.setView(layout); // Set the custom layout
+                        toast.show();
 
-                        Toast.makeText(MainActivity.this, "Failed \n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, "Failed \n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -653,7 +666,10 @@ public class MainActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
+                        toast.setView(layout); // Set the custom layout
+                        toast.show();
                     }
                 });
     }
@@ -673,7 +689,10 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                Toast toast = new Toast(getApplicationContext());
+                toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
+                toast.setView(layout); // Set the custom layout
+                toast.show();
             }
         });
         myauth.signOut();

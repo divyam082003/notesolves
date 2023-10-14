@@ -26,6 +26,10 @@ public class GAManager {
     final static String loginPge_privacy_click = "loginPge_privacy_click";
     final static String login_success = "login_success";
     final static String login_fail = "login_fail";
+    final static String show_rating_popup = "show_rating_popup";
+    final static String popup_rate_now_click = "popup_rate_now_click";
+    final static String popup_rate_later_click = "popup_rate_later_click";
+    final static String popup_rate_no_thanks_click = "popup_rate_no_thanks_click";
 
     //PARAMS
     final static String full_name = "full_name";
