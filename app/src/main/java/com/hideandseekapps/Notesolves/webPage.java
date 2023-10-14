@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,36 +16,30 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.hideandseekapps.firebase_tut.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,6 +65,7 @@ public class webPage extends AppCompatActivity {
     Menu menu;
     MenuItem item;
     ActionBar actionBar;
+    RateUs rateUs;
     final static String URL_NOTESOLVES = "https://nswebview.hideandseekapps.com";
 
     private AdView mAdView;
@@ -81,13 +75,13 @@ public class webPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_web_page);
 
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         firebaseAuth = FirebaseAuth.getInstance();
+        rateUs = new RateUs(webPage.this);
 
         InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
                 new InterstitialAdLoadCallback() {
@@ -110,8 +104,7 @@ public class webPage extends AppCompatActivity {
         if (mInterstitialAd != null) {
             mInterstitialAd.show(webPage.this);
         } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-        }
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");}
 
         mAdView.setAdListener(new AdListener() {
             @Override
@@ -159,11 +152,8 @@ public class webPage extends AppCompatActivity {
         adjustWebview(webView);
         loadWebView(webView);
 
-
-
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
-
 
     }
 
@@ -486,6 +476,59 @@ public class webPage extends AppCompatActivity {
         }
     }
 
+
+    void showRatingPopup(){
+        TextView later, no , rate;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, androidx.appcompat.R.style.Base_Theme_AppCompat_Light_DialogWhenLarge);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.rateus_dialog, null);
+        later = dialogView.findViewById(R.id.later);
+        no = dialogView.findViewById(R.id.noThanks);;
+        rate = dialogView.findViewById(R.id.rateUs);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setGravity(Gravity.BOTTOM);
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setDimAmount(0.7f); // Remove dim background
+        }
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                rateUs.saveNeverShowFlag();
+                Bundle bundle1 = new Bundle();
+                GAManager.logEvent(webPage.this,GAManager.popup_rate_no_thanks_click,bundle1);
+            }
+        });
+        later.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                rateUs.saveRemindLaterFlag();
+                Bundle bundle1 = new Bundle();
+                GAManager.logEvent(webPage.this,GAManager.popup_rate_later_click,bundle1);
+            }
+        });
+        rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                rateUs.saveRateUsFlagAndTimestamp();
+                rateUs.openAppRating();
+                Bundle bundle1 = new Bundle();
+                GAManager.logEvent(webPage.this,GAManager.popup_rate_now_click,bundle1);
+            }
+        });
+        Bundle bundle1 = new Bundle();
+        GAManager.logEvent(this,GAManager.show_rating_popup,bundle1);
+        dialog.show();
+    }
+
+
     void keyboard_close(View view){
         try {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -500,7 +543,7 @@ public class webPage extends AppCompatActivity {
         v.setText("");
     }
 
-    //OnStrart
+    //OnStart
     @Override
     protected void onStart() {
         super.onStart();
@@ -508,6 +551,9 @@ public class webPage extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putString(GAManager.activity_name,"WebPage");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
+        if (rateUs.isShowRatePopup(webPage.this)){
+            showRatingPopup();
+        }
     }
 
     @Override
@@ -524,4 +570,6 @@ public class webPage extends AppCompatActivity {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
+
+
 }
