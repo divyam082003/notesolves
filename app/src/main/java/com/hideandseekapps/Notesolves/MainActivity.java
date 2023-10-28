@@ -17,6 +17,7 @@ import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -49,6 +50,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hideandseekapps.firebase_tut.databinding.ActivityMainBinding;
+import com.hideandseekapps.firebase_tut.databinding.EmailVerifyBinding;
+import com.hideandseekapps.firebase_tut.databinding.ForogtPasswordBinding;
+import com.hideandseekapps.firebase_tut.databinding.LoginBinding;
+import com.hideandseekapps.firebase_tut.databinding.RegisterBinding;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,16 +76,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOGIN = "LOGIN";
     private static final String VERIFY_EMAIL = "VERIFY_EMAIL";
     private static final String FORGOT_PASSWD = "FORGOT_PSSWD";
-
-    //main activtity frames
-    @BindViews({
-            R.id.l0,    // SignIn
-            R.id.l1,    // Signup
-            R.id.l2,    // frgtPsswd
-            R.id.l3,    // emailVerify
-
-    })
-    List<FrameLayout> layouts;
 
 
     //register
@@ -129,18 +125,17 @@ public class MainActivity extends AppCompatActivity {
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
 
-    //disclaimer
-    @BindView(R.id.disclaimer)
-    TextView disclaimer;
+    ActivityMainBinding activityMainBinding;
+    LoginBinding loginBinding;
+    RegisterBinding registerBinding;
+    ForogtPasswordBinding forogtPasswordBinding;
+    EmailVerifyBinding emailVerifyBinding;
 
-    //privacy
-    @BindView(R.id.privacy1)
-    TextView privacy;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(activityMainBinding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         actionBar = getSupportActionBar();
@@ -154,14 +149,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mAdView = findViewById(R.id.adView);
-        String android_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
+        String android_id = Settings.Secure.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
+        AdRequest adRequest = new AdRequest.Builder().build();
 
-        mAdView.loadAd(adRequest);
-        mAdView.setAdListener(new AdListener() {
+        activityMainBinding.adView.loadAd(adRequest);
+        activityMainBinding.adView.setAdListener(new AdListener() {
             @Override
             public void onAdClicked() {
                 // Code to be executed when the user clicks on an ad.
@@ -201,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        InterstitialAd.load(this, "ca-app-pub-6906858630730365/4541335455", adRequest,
+        InterstitialAd.load(this, "ca-app-pub-6906858630730365/4541335455",
+                adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
@@ -224,13 +217,12 @@ public class MainActivity extends AppCompatActivity {
         myauth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
         LayoutInflater inflater = getLayoutInflater();
         layout = inflater.inflate(R.layout.custom_toast_layout, findViewById(R.id.toast_message));
         text = layout.findViewById(R.id.toast_message);
 
         //privacy
-        privacy.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.privacy1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, privacyPolicy.class);
@@ -417,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        disclaimer.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.disclaimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setDisclaimer(MainActivity.this);
@@ -473,10 +465,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     void setmain() {
-        layouts.get(0).setVisibility(View.VISIBLE);
-        layouts.get(1).setVisibility(View.GONE);
-        layouts.get(2).setVisibility(View.GONE);
-        layouts.get(3).setVisibility(View.GONE);
+        activityMainBinding.l0.setVisibility(View.VISIBLE);
+        activityMainBinding.l1.setVisibility(View.GONE);
+        activityMainBinding.l2.setVisibility(View.GONE);
+        activityMainBinding.l3.setVisibility(View.GONE);
         signin_visible = true;
         signup_visible = false;
         frgt_psswd_visible = false;
@@ -489,10 +481,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setRegister() {
-        layouts.get(1).setVisibility(View.VISIBLE);
-        layouts.get(0).setVisibility(View.GONE);
-        layouts.get(2).setVisibility(View.GONE);
-        layouts.get(3).setVisibility(View.GONE);
+        activityMainBinding.l1.setVisibility(View.VISIBLE);
+        activityMainBinding.l0.setVisibility(View.GONE);
+        activityMainBinding.l2.setVisibility(View.GONE);
+        activityMainBinding.l3.setVisibility(View.GONE);
         signin_visible = false;
         signup_visible = true;
         frgt_psswd_visible = false;
@@ -503,10 +495,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setForgetpassword() {
-        layouts.get(2).setVisibility(View.VISIBLE);
-        layouts.get(0).setVisibility(View.GONE);
-        layouts.get(1).setVisibility(View.GONE);
-        layouts.get(3).setVisibility(View.GONE);
+        activityMainBinding.l2.setVisibility(View.VISIBLE);
+        activityMainBinding.l0.setVisibility(View.GONE);
+        activityMainBinding.l1.setVisibility(View.GONE);
+        activityMainBinding.l3.setVisibility(View.GONE);
         signin_visible = false;
         signup_visible = false;
         frgt_psswd_visible = true;
@@ -517,10 +509,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setEmailVerify() {
-        layouts.get(3).setVisibility(View.VISIBLE);
-        layouts.get(0).setVisibility(View.GONE);
-        layouts.get(1).setVisibility(View.GONE);
-        layouts.get(2).setVisibility(View.GONE);
+        activityMainBinding.l3.setVisibility(View.VISIBLE);
+        activityMainBinding.l0.setVisibility(View.GONE);
+        activityMainBinding.l1.setVisibility(View.GONE);
+        activityMainBinding.l2.setVisibility(View.GONE);
         verifyEmailInput.get(0).setText(logininput.get(0).getText().toString());
         signin_visible = false;
         signup_visible = false;
@@ -646,8 +638,6 @@ public class MainActivity extends AppCompatActivity {
                         toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
                         toast.setView(layout); // Set the custom layout
                         toast.show();
-
-//                        Toast.makeText(MainActivity.this, "Failed \n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -668,7 +658,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Toast toast = new Toast(getApplicationContext());
                         toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
-                        toast.setView(layout); // Set the custom layout
+                        toast.setView(layout);
                         toast.show();
                     }
                 });
@@ -690,8 +680,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast toast = new Toast(getApplicationContext());
-                toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
-                toast.setView(layout); // Set the custom layout
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setView(layout);
                 toast.show();
             }
         });
@@ -709,7 +699,7 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
 
         } catch (Exception e) {
-            // TODO: handle exception
+
         }
     }
 

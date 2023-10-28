@@ -543,19 +543,6 @@ public class webPage extends AppCompatActivity {
         v.setText("");
     }
 
-    //OnStart
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setInfo(uid);
-        Bundle bundle1 = new Bundle();
-        bundle1.putString(GAManager.activity_name,"WebPage");
-        GAManager.logEvent(this,GAManager.open_screen,bundle1);
-        if (rateUs.isShowRatePopup(webPage.this)){
-            showRatingPopup();
-        }
-    }
-
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -571,5 +558,15 @@ public class webPage extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setInfo(uid);
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"WebPage");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
+        if (rateUs.isShowRatePopup(webPage.this)){
+            showRatingPopup();
+        }
+    }
 }
