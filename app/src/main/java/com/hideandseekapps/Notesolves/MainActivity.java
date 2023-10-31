@@ -2,11 +2,20 @@ package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,7 +32,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
+    ForceUpdate mForceUpdate;
+    ActivityResultLauncher<IntentSenderRequest> mActivityResultLauncher;
+    Boolean isUpdateCancelled = false;
+
 
 
     private static final String REGISTER = "REGISTER";
@@ -142,11 +154,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
         actionBar = getSupportActionBar();
         actionBar.hide();
+        mForceUpdate = new ForceUpdate(this);
 
+        mActivityResultLauncher = this.registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        switch (result.getResultCode()) {
+                            case com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED:
+                                isUpdateCancelled = true;
+                                Toast.makeText(MainActivity.this, "Update Failed", Toast.LENGTH_SHORT).show();
+                                break;
+                            case RESULT_OK:
+                                isUpdateCancelled = false;
+                                break;
+                            case RESULT_CANCELED:
+                                Toast.makeText(MainActivity.this, "Update Cancelled", Toast.LENGTH_SHORT).show();
+                                isUpdateCancelled = true;
+                                break;
 
+                        }
+                    }
+                });
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -241,7 +272,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         //Register Work
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,7 +286,6 @@ public class MainActivity extends AppCompatActivity {
                 keyboar_close(register);
             }
         });
-
 
         registerInput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -277,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -296,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
                 keyboar_close(register_btn);
             }
         });
-
 
         // login Work
         logininput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -317,7 +344,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -334,7 +360,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Forgot password work
-
         forgot_psswd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -364,7 +389,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         forgot_psswd_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -378,7 +402,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //email verify
-
         verify_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -471,7 +494,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     void setmain() {
         layouts.get(0).setVisibility(View.VISIBLE);
         layouts.get(1).setVisibility(View.GONE);
@@ -539,7 +561,6 @@ public class MainActivity extends AppCompatActivity {
         GAManager.logEvent(this,GAManager.loginPge_disclaimer_click,params);
 
     }
-
 
     private void register(String email, String psswd, String registerName) {
         Bundle params = new Bundle();
@@ -646,8 +667,6 @@ public class MainActivity extends AppCompatActivity {
                         toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
                         toast.setView(layout); // Set the custom layout
                         toast.show();
-
-//                        Toast.makeText(MainActivity.this, "Failed \n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -697,7 +716,6 @@ public class MainActivity extends AppCompatActivity {
         });
         myauth.signOut();
     }
-
 
     void clear(EditText v) {
         v.setText("");
@@ -754,6 +772,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void showUpdatePopUp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Update Mandatory");
+        builder.setMessage("Your app version is no longer supported. " +
+                "Please update to the latest version to ensure a seamless experience.");
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mForceUpdate.requestAppUpdate(mActivityResultLauncher);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+    public void update() {
+        if (mForceUpdate.checkForUpdate()) {
+
+            if (isUpdateCancelled) {
+                showUpdatePopUp();
+                return;
+            }
+            mForceUpdate.requestAppUpdate(mActivityResultLauncher);
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -773,5 +815,17 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putString(GAManager.activity_name,"LoginScreen");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        update();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
