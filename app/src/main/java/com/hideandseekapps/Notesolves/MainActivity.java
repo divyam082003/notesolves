@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -121,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
     Button forgot_psswd_btn;
     TextView text;
     View layout;
+
+    TextView vCode;
 
     //actionBar
     ActionBar actionBar;
@@ -423,6 +426,10 @@ public class MainActivity extends AppCompatActivity {
                 setDisclaimer(MainActivity.this);
             }
         });
+
+        vCode = findViewById(R.id.vCode);
+        vCode.setText("| v"+getAppVersionName(this));
+
     }
 
     String checkCred(String email, String password) {
@@ -539,8 +546,7 @@ public class MainActivity extends AppCompatActivity {
         GAManager.logEvent(this,GAManager.loginPge_disclaimer_click,params);
 
     }
-
-
+    
     private void register(String email, String psswd, String registerName) {
         Bundle params = new Bundle();
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -696,6 +702,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         myauth.signOut();
+    }
+
+    public String getAppVersionName(Context context) {
+        String versionName = "";
+        try {
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 
 
