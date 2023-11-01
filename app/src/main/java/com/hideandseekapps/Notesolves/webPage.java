@@ -99,27 +99,6 @@ public class webPage extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
-        mForceUpdate = new ForceUpdate(this);
-        mActivityResultLauncher = this.registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        switch (result.getResultCode()) {
-                            case com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED:
-                                isUpdateCancelled = true;
-                                Toast.makeText(webPage.this, "Update Failed", Toast.LENGTH_SHORT).show();
-                                break;
-                            case RESULT_OK:
-                                isUpdateCancelled = false;
-                                break;
-                            case RESULT_CANCELED:
-                                Toast.makeText(webPage.this, "Update Cancelled", Toast.LENGTH_SHORT).show();
-                                isUpdateCancelled = true;
-                                break;
-
-                        }
-                    }
-                });
     }
 
     void adjustWebview(WebView webView){
@@ -583,30 +562,7 @@ public class webPage extends AppCompatActivity {
         });
     }
 
-    public void showUpdatePopUp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(webPage.this);
-        builder.setTitle("Update Mandatory");
-        builder.setMessage("Your app version is no longer supported. " +
-                "Please update to the latest version to ensure a seamless experience.");
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mForceUpdate.requestAppUpdate(mActivityResultLauncher);
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
-    public void update() {
-        if (mForceUpdate.checkForUpdate()) {
 
-            if (isUpdateCancelled) {
-                showUpdatePopUp();
-                return;
-            }
-            mForceUpdate.requestAppUpdate(mActivityResultLauncher);
-        }
-    }
 
 
     @Override
@@ -619,12 +575,6 @@ public class webPage extends AppCompatActivity {
         if (rateUs.isShowRatePopup(webPage.this)){
             showRatingPopup();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        update();
         loadAd();
     }
 }

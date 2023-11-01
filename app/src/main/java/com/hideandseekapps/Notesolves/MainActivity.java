@@ -72,9 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
-    ForceUpdate mForceUpdate;
-    ActivityResultLauncher<IntentSenderRequest> mActivityResultLauncher;
-    Boolean isUpdateCancelled = false;
+
 
 
 
@@ -156,28 +154,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         actionBar = getSupportActionBar();
         actionBar.hide();
-        mForceUpdate = new ForceUpdate(this);
-
-        mActivityResultLauncher = this.registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        switch (result.getResultCode()) {
-                            case com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED:
-                                isUpdateCancelled = true;
-                                Toast.makeText(MainActivity.this, "Update Failed", Toast.LENGTH_SHORT).show();
-                                break;
-                            case RESULT_OK:
-                                isUpdateCancelled = false;
-                                break;
-                            case RESULT_CANCELED:
-                                Toast.makeText(MainActivity.this, "Update Cancelled", Toast.LENGTH_SHORT).show();
-                                isUpdateCancelled = true;
-                                break;
-
-                        }
-                    }
-                });
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -772,30 +748,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showUpdatePopUp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Update Mandatory");
-        builder.setMessage("Your app version is no longer supported. " +
-                "Please update to the latest version to ensure a seamless experience.");
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mForceUpdate.requestAppUpdate(mActivityResultLauncher);
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
-    public void update() {
-        if (mForceUpdate.checkForUpdate()) {
 
-            if (isUpdateCancelled) {
-                showUpdatePopUp();
-                return;
-            }
-            mForceUpdate.requestAppUpdate(mActivityResultLauncher);
-        }
-    }
 
     @Override
     protected void onStart() {
@@ -818,14 +771,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        update();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

@@ -1,6 +1,5 @@
 package com.hideandseekapps.Notesolves;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -13,7 +12,6 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
@@ -80,10 +78,16 @@ public class ForceUpdate {
 
     }
 
-    public void requestAppUpdate(ActivityResultLauncher activityResultLauncher) {
+    public void requestAppUpdate(ActivityResultLauncher activityResultLauncher, AppUpdateView appUpdateView) {
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
         appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
-            if ( (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+
+            if (!(appUpdateInfo.updateAvailability()==UpdateAvailability.UPDATE_AVAILABLE)){
+                appUpdateView.updateNotAvailable();
+                return;
+            }
+
+            else if ( (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
                 ||
             appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
