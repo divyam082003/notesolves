@@ -31,24 +31,23 @@ public class launcher extends AppCompatActivity implements AppUpdateView {
         actionBar.hide();
 
         mForceUpdate = new ForceUpdate(this);
-        update();
         mActivityResultLauncher = this.registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         switch (result.getResultCode()) {
                             case com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED:
-                            case RESULT_CANCELED:
                                 isUpdateCancelled = true;
                                 break;
                             case RESULT_OK:
                                 isUpdateCancelled = false;
                                 break;
+                            case RESULT_CANCELED:
+                                isUpdateCancelled = true;
+                                break;
                         }
                     }
                 });
-
-
     }
 
     @Override
@@ -88,4 +87,9 @@ public class launcher extends AppCompatActivity implements AppUpdateView {
         finish();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        update();
+    }
 }
