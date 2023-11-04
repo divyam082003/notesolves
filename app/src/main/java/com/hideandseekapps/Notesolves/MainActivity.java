@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -32,6 +33,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -132,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
     TextView text;
     View layout;
 
+    TextView vCode;
+
     //actionBar
     ActionBar actionBar;
 
@@ -152,8 +156,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         actionBar = getSupportActionBar();
         actionBar.hide();
+
+
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -248,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         //Register Work
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 keyboar_close(register);
             }
         });
+
 
         registerInput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -282,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -300,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 keyboar_close(register_btn);
             }
         });
+
 
         // login Work
         logininput.get(1).setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -320,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -336,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Forgot password work
+
         forgot_psswd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -365,6 +378,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         forgot_psswd_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -378,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //email verify
+
         verify_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -422,6 +437,10 @@ public class MainActivity extends AppCompatActivity {
                 setDisclaimer(MainActivity.this);
             }
         });
+
+        vCode = findViewById(R.id.vCode);
+        vCode.setText("| v"+getAppVersionName(this));
+
     }
 
     String checkCred(String email, String password) {
@@ -469,6 +488,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
     void setmain() {
         layouts.get(0).setVisibility(View.VISIBLE);
@@ -643,6 +663,8 @@ public class MainActivity extends AppCompatActivity {
                         toast.setDuration(Toast.LENGTH_SHORT); // Set the duration of the toast
                         toast.setView(layout); // Set the custom layout
                         toast.show();
+
+//                        Toast.makeText(MainActivity.this, "Failed \n" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -692,6 +714,17 @@ public class MainActivity extends AppCompatActivity {
         });
         myauth.signOut();
     }
+
+    public String getAppVersionName(Context context) {
+        String versionName = "";
+        try {
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
 
     void clear(EditText v) {
         v.setText("");
