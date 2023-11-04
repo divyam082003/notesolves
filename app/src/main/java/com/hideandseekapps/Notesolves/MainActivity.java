@@ -2,20 +2,11 @@ package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -74,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
-
-
 
 
     private static final String REGISTER = "REGISTER";
@@ -557,6 +546,7 @@ public class MainActivity extends AppCompatActivity {
         GAManager.logEvent(this,GAManager.loginPge_disclaimer_click,params);
 
     }
+    
     private void register(String email, String psswd, String registerName) {
         Bundle params = new Bundle();
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -781,7 +771,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -801,7 +790,4 @@ public class MainActivity extends AppCompatActivity {
         bundle1.putString(GAManager.activity_name,"LoginScreen");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
-
-
-
 }
