@@ -110,6 +110,15 @@
             android:textSize="14sp"
             android:layout_margin="3dp"
             />
+        <TextView
+            android:id="@+id/vCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="| v"
+            android:textSize="12sp"
+            android:layout_margin="3dp"
+            />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
