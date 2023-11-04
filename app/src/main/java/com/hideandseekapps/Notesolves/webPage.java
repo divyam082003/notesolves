@@ -2,11 +2,18 @@ package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -54,11 +61,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
-
-
     @BindView(R.id.webView) WebView webView;
-
-
+    
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
     String uid,name,email;
@@ -67,10 +71,12 @@ public class webPage extends AppCompatActivity {
     ActionBar actionBar;
     RateUs rateUs;
     final static String URL_NOTESOLVES = "https://nswebview.hideandseekapps.com";
-
     private AdView mAdView;
-
     private InterstitialAd mInterstitialAd;
+    private AdRequest adRequest;
+    ForceUpdate mForceUpdate;
+    ActivityResultLauncher<IntentSenderRequest> mActivityResultLauncher;
+    Boolean isUpdateCancelled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,73 +84,11 @@ public class webPage extends AppCompatActivity {
         setContentView(R.layout.activity_web_page);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         firebaseAuth = FirebaseAuth.getInstance();
+        
         rateUs = new RateUs(webPage.this);
-
-        InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        mInterstitialAd = interstitialAd;
-                        Log.i(TAG, "onAdLoaded");
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error
-                        Log.d(TAG, loadAdError.toString());
-                        mInterstitialAd = null;
-                    }
-                });
-
-        if (mInterstitialAd != null) {
-            mInterstitialAd.show(webPage.this);
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.");}
-
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-                super.onAdClicked();
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-                super.onAdFailedToLoad(adError);
-                mAdView.loadAd(adRequest);
-            }
-
-            @Override
-            public void onAdImpression() {
-                // Code to be executed when an impression is recorded
-                // for an ad.
-            }
-
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-                super.onAdLoaded();
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-                super.onAdOpened();
-            }
-        });
 
         ButterKnife.bind(this);
         actionBar = getSupportActionBar();
@@ -201,7 +145,6 @@ public class webPage extends AppCompatActivity {
         });
     }
 
-
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()){
@@ -217,7 +160,6 @@ public class webPage extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.user_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -299,7 +241,6 @@ public class webPage extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 
     void setPolicy(Context context){
         Intent intent = new Intent(context,privacyPolicy.class);
@@ -476,7 +417,6 @@ public class webPage extends AppCompatActivity {
         }
     }
 
-
     void showRatingPopup(){
         TextView later, no , rate;
         AlertDialog.Builder builder = new AlertDialog.Builder(this, androidx.appcompat.R.style.Base_Theme_AppCompat_Light_DialogWhenLarge);
@@ -528,7 +468,6 @@ public class webPage extends AppCompatActivity {
         dialog.show();
     }
 
-
     void keyboard_close(View view){
         try {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -541,19 +480,6 @@ public class webPage extends AppCompatActivity {
 
     void clear(EditText v){
         v.setText("");
-    }
-
-    //OnStart
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setInfo(uid);
-        Bundle bundle1 = new Bundle();
-        bundle1.putString(GAManager.activity_name,"WebPage");
-        GAManager.logEvent(this,GAManager.open_screen,bundle1);
-        if (rateUs.isShowRatePopup(webPage.this)){
-            showRatingPopup();
-        }
     }
 
     @Override
@@ -571,5 +497,84 @@ public class webPage extends AppCompatActivity {
         }
     }
 
+    private void loadAd(){
+        InterstitialAd.load(this,"ca-app-pub-6906858630730365/5410181101", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        mInterstitialAd = interstitialAd;
+                        Log.i(TAG, "onAdLoaded");
+                    }
 
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.d(TAG, loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(webPage.this);
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");}
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                super.onAdClicked();
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                super.onAdFailedToLoad(adError);
+                mAdView.loadAd(adRequest);
+            }
+
+            @Override
+            public void onAdImpression() {
+                // Code to be executed when an impression is recorded
+                // for an ad.
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                super.onAdOpened();
+            }
+        });
+    }
+
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setInfo(uid);
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(GAManager.activity_name,"WebPage");
+        GAManager.logEvent(this,GAManager.open_screen,bundle1);
+        if (rateUs.isShowRatePopup(webPage.this)){
+            showRatingPopup();
+        }
+        loadAd();
+    }
 }
