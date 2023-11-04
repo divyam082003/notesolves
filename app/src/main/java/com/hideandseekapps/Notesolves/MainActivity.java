@@ -557,7 +557,6 @@ public class MainActivity extends AppCompatActivity {
         GAManager.logEvent(this,GAManager.loginPge_disclaimer_click,params);
 
     }
-
     private void register(String email, String psswd, String registerName) {
         Bundle params = new Bundle();
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
