@@ -27,23 +27,21 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+
     }
 }
 
 dependencies {
 
-    //butterKnife
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
-    //firebase
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    implementation 'com.jakewharton:butterknife:10.2.3'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.5'
     implementation 'com.google.firebase:firebase-analytics:21.2.0'
-    implementation 'com.google.firebase:firebase-config:21.5.0'
-    implementation 'com.google.firebase:firebase-auth:21.1.0'
-    implementation 'com.google.firebase:firebase-database:20.1.0'
-    implementation platform('com.google.firebase:firebase-bom:31.2.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging:23.3.1'
+
+
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
@@ -52,12 +50,21 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
-    implementation 'androidx.core:core-splashscreen:1.0.0-alpha02'
 
-    implementation 'com.google.android.play:app-update:2.0.1'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'com.google.firebase:firebase-database:20.1.0'
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+
+    implementation 'androidx.core:core-splashscreen:1.0.0-alpha02'
+    
+
 
     configurations.all{
+
         exclude group:'com.google.android.gms' , module: 'play-services-safetynet'
     }
+
 }
