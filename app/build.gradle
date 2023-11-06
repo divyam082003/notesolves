@@ -27,8 +27,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+
     }
 }
 
@@ -60,9 +59,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:21.5.0'
 
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha02'
-
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-
+    
 
 
     configurations.all{
