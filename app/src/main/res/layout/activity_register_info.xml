@@ -65,30 +65,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        android:id="@+id/age"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="@string/age"-->
 
-<!--        android:layout_margin="@dimen/margin"-->
-
-<!--        app:layout_constraintTop_toBottomOf="@+id/name"-->
-<!--        app:layout_constraintLeft_toLeftOf="@+id/register_info_title"-->
-<!--        app:layout_constraintRight_toRightOf="@+id/register_info_title"-->
-
-<!--        app:hintTextColor="@color/primary"-->
-<!--        >-->
-
-<!--        <com.google.android.material.textfield.TextInputEditText-->
-<!--            android:id="@+id/register_age"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:inputType="textEmailAddress"-->
-<!--            android:background="@color/white"-->
-<!--            />-->
-
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phn"
@@ -159,19 +136,7 @@
         app:layout_constraintRight_toRightOf="@+id/register_info_title"
         />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Copyright"
-        android:textAlignment="center"
 
-        android:layout_marginRight="@dimen/margin"
-        android:layout_marginLeft="@dimen/margin"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
