@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".privacyPolicy">
+    tools:context="com.hideandseekapps.Notesolves.privacyPolicy">
 
     <WebView
         android:id="@+id/privacyWeb"

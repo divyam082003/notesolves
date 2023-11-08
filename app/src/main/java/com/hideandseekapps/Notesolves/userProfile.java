@@ -20,6 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hideandseekapps.firebase_tut.R;
+import com.hideandseekapps.firebase_tut.databinding.ActivityMainBinding;
+import com.hideandseekapps.firebase_tut.databinding.ActivityUserProfileBinding;
+import com.hideandseekapps.firebase_tut.databinding.ActivityWebPageBinding;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,16 +34,7 @@ public class userProfile extends AppCompatActivity {
     DatabaseReference databaseReference;
 
 
-    @BindView(R.id.userName)
-    TextView nametv;
-    @BindView(R.id.userEmail)
-    TextView emailtv;
-    @BindView(R.id.userPhone)
-    TextView phntv;
-    @BindView(R.id.userCollege)
-    TextView cllgtv;
-
-    TextView vCode;
+    ActivityUserProfileBinding userProfileBinding;
 
     ActionBar actionBar;
 
@@ -48,8 +42,8 @@ public class userProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
-        ButterKnife.bind(this);
+        userProfileBinding = ActivityUserProfileBinding.inflate(getLayoutInflater());
+        setContentView(userProfileBinding.getRoot());
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -57,8 +51,7 @@ public class userProfile extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
-        vCode = findViewById(R.id.vCode);
-        vCode.setText("v"+getAppVersionName(this));
+        userProfileBinding.vCode.setText("v"+getAppVersionName(this));
     }
 
     private void setInfo(String uid) {
@@ -73,10 +66,10 @@ public class userProfile extends AppCompatActivity {
                     phn = obj.phone;
                     cllg = obj.college;
 
-                    nametv.setText(name);
-                    emailtv.setText(email);
-                    phntv.setText(phn);
-                    cllgtv.setText(cllg);
+                    userProfileBinding.userName.setText(name);
+                    userProfileBinding.userEmail.setText(email);
+                    userProfileBinding.userPhone.setText(phn);
+                    userProfileBinding.userCollege.setText(cllg);
                 }
             }
             @Override
