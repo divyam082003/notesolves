@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,6 +40,8 @@ public class userProfile extends AppCompatActivity {
     @BindView(R.id.userCollege)
     TextView cllgtv;
 
+    TextView vCode;
+
     ActionBar actionBar;
 
 
@@ -47,14 +51,14 @@ public class userProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
 
-
-
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
+        vCode = findViewById(R.id.vCode);
+        vCode.setText("v"+getAppVersionName(this));
     }
 
     private void setInfo(String uid) {
@@ -90,6 +94,17 @@ public class userProfile extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public String getAppVersionName(Context context) {
+        String versionName = "";
+        try {
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
 
     @Override
     protected void onStart() {

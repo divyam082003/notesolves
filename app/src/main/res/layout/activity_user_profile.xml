@@ -105,8 +105,19 @@
             android:textAlignment="viewStart"
 
             android:textSize="20sp" />
-
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:id="@+id/vCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="v"
+        android:textSize="12sp"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
