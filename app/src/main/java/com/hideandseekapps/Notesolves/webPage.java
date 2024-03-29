@@ -1,15 +1,12 @@
 package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
-
-import static com.hideandseekapps.Notesolves.MainActivity.RC_NOTIFICATION;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,8 +15,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -72,6 +71,7 @@ public class webPage extends AppCompatActivity {
     ActionBar actionBar;
     RateUs rateUs;
     final static String URL_NOTESOLVES = "https://nswebview.hideandseekapps.com";
+    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
 
     private AdView mAdView;
 
@@ -160,35 +160,46 @@ public class webPage extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
-        askNotification();
+        if (!areNotificationsEnabled()) {
+
+            requestNotificationPermission();
+        }
 
     }
 
-    void askNotification(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)==
-                PackageManager.PERMISSION_GRANTED){
-            Log.d(TAG, "askNotification: Already Granted");
-        }
-        else{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},RC_NOTIFICATION);
-            }
+    private boolean areNotificationsEnabled() {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        return notificationManager.areNotificationsEnabled();
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivityForResult(intent, NOTIFICATION_PERMISSION_REQUEST_CODE);
+        } else {
+            // For older Android versions, open application settings
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            startActivityForResult(intent, NOTIFICATION_PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == RC_NOTIFICATION){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.d(TAG, "askNotification:Granted");
-            }
-            else{
-                Log.d(TAG, "askNotification:Denied");
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
+            // Check if the user granted notification permission after the settings activity
+            if (areNotificationsEnabled()) {
+                // Permission granted, do necessary actions
+            } else {
+                // Permission not granted, you may choose to close the app or handle it differently
+                finish();
             }
         }
     }
+
 
     void adjustWebview(WebView webView){
         webView.getSettings().setJavaScriptEnabled(true);
