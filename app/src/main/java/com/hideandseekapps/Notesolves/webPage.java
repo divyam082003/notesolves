@@ -74,15 +74,15 @@ public class webPage extends AppCompatActivity {
 
     private InterstitialAd mInterstitialAd;
 
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_page);
 
-        ScreenShotDisableConfig screenShotDisableConfig = new ScreenShotDisableConfig();
-        if (screenShotDisableConfig.getIsScreenShotDisable()){
+        FirebaseRemoteConfigManager remoteConfigManager = FirebaseRemoteConfigManager.getInstance(this);
+        remoteConfigManager.fetchRemoteConfig();
+        boolean disableScreenshot = remoteConfigManager.getBoolean(FirebaseRemoteConfigManager.REMOTE_CONFIG_SCREENSHOT_KEY);
+        if (disableScreenshot){
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }
 
