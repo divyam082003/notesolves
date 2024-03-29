@@ -2,14 +2,20 @@ package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -28,8 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -56,16 +60,16 @@ import com.hideandseekapps.firebase_tut.databinding.EmailVerifyBinding;
 import com.hideandseekapps.firebase_tut.databinding.ForogtPasswordBinding;
 import com.hideandseekapps.firebase_tut.databinding.LoginBinding;
 import com.hideandseekapps.firebase_tut.databinding.RegisterBinding;
-
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 
+
 public class MainActivity extends AppCompatActivity {
 
+    public static final int RC_NOTIFICATION = 99;
     private boolean signup_visible, signin_visible, frgt_psswd_visible, VisibleEmailVerify = true;
     private String registerName, registerEmail, registerPassword, loginEmail, loginPassword, forgotPasswordEmail, emailVerify, passwordVerify;
     private FirebaseAuth myauth;
@@ -422,6 +426,36 @@ public class MainActivity extends AppCompatActivity {
         vCode = findViewById(R.id.vCode);
         vCode.setText("| v"+getAppVersionName(this));
 
+        askNotification();
+
+
+    }
+
+    void askNotification(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)==
+        PackageManager.PERMISSION_GRANTED){
+            Log.d(TAG, "askNotification: Already Granted");
+        }
+
+        else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+               requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},RC_NOTIFICATION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == RC_NOTIFICATION){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.d(TAG, "askNotification:Granted");
+            }
+            else{
+                Log.d(TAG, "askNotification:Denied");
+            }
+        }
     }
 
     String checkCred(String email, String password) {
@@ -760,7 +794,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -780,4 +813,6 @@ public class MainActivity extends AppCompatActivity {
         bundle1.putString(GAManager.activity_name,"LoginScreen");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
     }
+
+
 }

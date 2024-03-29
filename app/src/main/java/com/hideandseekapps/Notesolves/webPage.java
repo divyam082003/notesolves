@@ -2,17 +2,23 @@ package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
 
+import static com.hideandseekapps.Notesolves.MainActivity.RC_NOTIFICATION;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -54,7 +60,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
-
 
     @BindView(R.id.webView) WebView webView;
 
@@ -155,6 +160,34 @@ public class webPage extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
+        askNotification();
+
+    }
+
+    void askNotification(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)==
+                PackageManager.PERMISSION_GRANTED){
+            Log.d(TAG, "askNotification: Already Granted");
+        }
+        else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},RC_NOTIFICATION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == RC_NOTIFICATION){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Log.d(TAG, "askNotification:Granted");
+            }
+            else{
+                Log.d(TAG, "askNotification:Denied");
+            }
+        }
     }
 
     void adjustWebview(WebView webView){
