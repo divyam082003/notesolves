@@ -1,12 +1,10 @@
 package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -51,27 +48,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
 
-
     @BindView(R.id.webView) WebView webView;
-
-
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
     String uid,name,email;
-    Menu menu;
-    MenuItem item;
     ActionBar actionBar;
     RateUs rateUs;
     final static String URL_NOTESOLVES = "https://nswebview.hideandseekapps.com";
-
     private AdView mAdView;
-
     private InterstitialAd mInterstitialAd;
 
     @Override
@@ -166,6 +155,9 @@ public class webPage extends AppCompatActivity {
 
     }
 
+
+
+
     void adjustWebview(WebView webView){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
@@ -210,7 +202,6 @@ public class webPage extends AppCompatActivity {
         });
     }
 
-
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()){
@@ -226,7 +217,6 @@ public class webPage extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.user_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -308,7 +298,6 @@ public class webPage extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 
     void setPolicy(Context context){
         Intent intent = new Intent(context,privacyPolicy.class);
@@ -485,7 +474,6 @@ public class webPage extends AppCompatActivity {
         }
     }
 
-
     void showRatingPopup(){
         TextView later, no , rate;
         AlertDialog.Builder builder = new AlertDialog.Builder(this, androidx.appcompat.R.style.Base_Theme_AppCompat_Light_DialogWhenLarge);
@@ -536,7 +524,6 @@ public class webPage extends AppCompatActivity {
         GAManager.logEvent(this,GAManager.show_rating_popup,bundle1);
         dialog.show();
     }
-
 
     void keyboard_close(View view){
         try {

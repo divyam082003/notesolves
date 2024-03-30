@@ -1,11 +1,9 @@
 package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,18 +16,13 @@ import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -56,23 +49,18 @@ import com.hideandseekapps.firebase_tut.databinding.EmailVerifyBinding;
 import com.hideandseekapps.firebase_tut.databinding.ForogtPasswordBinding;
 import com.hideandseekapps.firebase_tut.databinding.LoginBinding;
 import com.hideandseekapps.firebase_tut.databinding.RegisterBinding;
-
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
     private boolean signup_visible, signin_visible, frgt_psswd_visible, VisibleEmailVerify = true;
     private String registerName, registerEmail, registerPassword, loginEmail, loginPassword, forgotPasswordEmail, emailVerify, passwordVerify;
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
-
-
     private static final String REGISTER = "REGISTER";
     private static final String LOGIN = "LOGIN";
     private static final String VERIFY_EMAIL = "VERIFY_EMAIL";
@@ -118,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
     Button forgot_psswd_btn;
     TextView text;
     View layout;
-
     TextView vCode;
 
     //actionBar
@@ -127,24 +114,19 @@ public class MainActivity extends AppCompatActivity {
     //ad
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
-
     ActivityMainBinding activityMainBinding;
     LoginBinding loginBinding;
     RegisterBinding registerBinding;
     ForogtPasswordBinding forogtPasswordBinding;
     EmailVerifyBinding emailVerifyBinding;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
         actionBar = getSupportActionBar();
         actionBar.hide();
-
-
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -216,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         ButterKnife.bind(this);
-
         myauth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -421,8 +402,10 @@ public class MainActivity extends AppCompatActivity {
 
         vCode = findViewById(R.id.vCode);
         vCode.setText("| v"+getAppVersionName(this));
-
     }
+
+
+
 
     String checkCred(String email, String password) {
         String isCorrect;
@@ -760,7 +743,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -779,5 +761,8 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putString(GAManager.activity_name,"LoginScreen");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
+
     }
+
+
 }

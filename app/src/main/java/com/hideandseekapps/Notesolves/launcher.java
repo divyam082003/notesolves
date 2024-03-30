@@ -5,12 +5,15 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -82,8 +85,25 @@ public class launcher extends AppCompatActivity implements AppUpdateView {
     }
 
     void startActivityIntent(){
+
+        if(ActivityCompat.checkSelfPermission(this,PermissionManager.PERMISSION_POST_NOTIFICATION) != PackageManager.PERMISSION_GRANTED){
+            PermissionManager.getInstance(this)
+                    .requestPermission(PermissionManager.PERMISSION_POST_NOTIFICATION);
+        }
+        else{
+            navigatetonextscreen();
+        }
+    }
+
+    private void navigatetonextscreen() {
         Intent intent = new Intent(launcher.this,MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        navigatetonextscreen();
         finish();
     }
 
