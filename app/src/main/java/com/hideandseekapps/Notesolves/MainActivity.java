@@ -1,23 +1,13 @@
 package com.hideandseekapps.Notesolves;
 
 import static android.content.ContentValues.TAG;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -26,14 +16,11 @@ import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdListener;
@@ -68,17 +55,12 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 
-
 public class MainActivity extends AppCompatActivity {
-
-    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
     private boolean signup_visible, signin_visible, frgt_psswd_visible, VisibleEmailVerify = true;
     private String registerName, registerEmail, registerPassword, loginEmail, loginPassword, forgotPasswordEmail, emailVerify, passwordVerify;
     private FirebaseAuth myauth;
     private DatabaseReference firebaseDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
-
-
     private static final String REGISTER = "REGISTER";
     private static final String LOGIN = "LOGIN";
     private static final String VERIFY_EMAIL = "VERIFY_EMAIL";
@@ -124,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
     Button forgot_psswd_btn;
     TextView text;
     View layout;
-
     TextView vCode;
 
     //actionBar
@@ -133,24 +114,19 @@ public class MainActivity extends AppCompatActivity {
     //ad
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
-
     ActivityMainBinding activityMainBinding;
     LoginBinding loginBinding;
     RegisterBinding registerBinding;
     ForogtPasswordBinding forogtPasswordBinding;
     EmailVerifyBinding emailVerifyBinding;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
         actionBar = getSupportActionBar();
         actionBar.hide();
-
-
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -222,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         ButterKnife.bind(this);
-
         myauth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance().getReference();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -428,44 +403,13 @@ public class MainActivity extends AppCompatActivity {
         vCode = findViewById(R.id.vCode);
         vCode.setText("| v"+getAppVersionName(this));
 
-        if (!areNotificationsEnabled()) {
-            requestNotificationPermission();
-        }
+        PermissionManager permissionManager = PermissionManager.getInstance(this);
+        permissionManager.requestPermission(this,PermissionManager.PERMISSION_POST_NOTIFICATION);
+
 
     }
 
-    private boolean areNotificationsEnabled() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        return notificationManager.areNotificationsEnabled();
-    }
 
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivityForResult(intent, NOTIFICATION_PERMISSION_REQUEST_CODE);
-        } else {
-            // For older Android versions, open application settings
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", getPackageName(), null);
-            intent.setData(uri);
-            startActivityForResult(intent, NOTIFICATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
-            // Check if the user granted notification permission after the settings activity
-            if (areNotificationsEnabled()) {
-                // Permission granted, do necessary actions
-            } else {
-                // Permission not granted, you may choose to close the app or handle it differently
-                finish();
-            }
-        }
-    }
 
 
     String checkCred(String email, String password) {

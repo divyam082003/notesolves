@@ -5,20 +5,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,7 +28,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -54,27 +46,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class webPage extends AppCompatActivity {
 
     @BindView(R.id.webView) WebView webView;
-
-
     DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
     String uid,name,email;
-    Menu menu;
-    MenuItem item;
     ActionBar actionBar;
     RateUs rateUs;
     final static String URL_NOTESOLVES = "https://nswebview.hideandseekapps.com";
-    private static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1001;
-
     private AdView mAdView;
-
     private InterstitialAd mInterstitialAd;
 
     @Override
@@ -160,45 +144,12 @@ public class webPage extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
-        if (!areNotificationsEnabled()) {
 
-            requestNotificationPermission();
-        }
-
+        PermissionManager permissionManager = PermissionManager.getInstance(this);
+        permissionManager.requestPermission(this,PermissionManager.PERMISSION_POST_NOTIFICATION);
     }
 
-    private boolean areNotificationsEnabled() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        return notificationManager.areNotificationsEnabled();
-    }
 
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivityForResult(intent, NOTIFICATION_PERMISSION_REQUEST_CODE);
-        } else {
-            // For older Android versions, open application settings
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", getPackageName(), null);
-            intent.setData(uri);
-            startActivityForResult(intent, NOTIFICATION_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == NOTIFICATION_PERMISSION_REQUEST_CODE) {
-            // Check if the user granted notification permission after the settings activity
-            if (areNotificationsEnabled()) {
-                // Permission granted, do necessary actions
-            } else {
-                // Permission not granted, you may choose to close the app or handle it differently
-                finish();
-            }
-        }
-    }
 
 
     void adjustWebview(WebView webView){
@@ -245,7 +196,6 @@ public class webPage extends AppCompatActivity {
         });
     }
 
-
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()){
@@ -261,7 +211,6 @@ public class webPage extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.user_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -343,7 +292,6 @@ public class webPage extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 
     void setPolicy(Context context){
         Intent intent = new Intent(context,privacyPolicy.class);
@@ -520,7 +468,6 @@ public class webPage extends AppCompatActivity {
         }
     }
 
-
     void showRatingPopup(){
         TextView later, no , rate;
         AlertDialog.Builder builder = new AlertDialog.Builder(this, androidx.appcompat.R.style.Base_Theme_AppCompat_Light_DialogWhenLarge);
@@ -571,7 +518,6 @@ public class webPage extends AppCompatActivity {
         GAManager.logEvent(this,GAManager.show_rating_popup,bundle1);
         dialog.show();
     }
-
 
     void keyboard_close(View view){
         try {
