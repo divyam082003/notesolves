@@ -402,11 +402,6 @@ public class MainActivity extends AppCompatActivity {
 
         vCode = findViewById(R.id.vCode);
         vCode.setText("| v"+getAppVersionName(this));
-
-        PermissionManager permissionManager = PermissionManager.getInstance(this);
-        permissionManager.requestPermission(this,PermissionManager.PERMISSION_POST_NOTIFICATION);
-
-
     }
 
 
@@ -766,6 +761,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle1 = new Bundle();
         bundle1.putString(GAManager.activity_name,"LoginScreen");
         GAManager.logEvent(this,GAManager.open_screen,bundle1);
+
     }
 
 

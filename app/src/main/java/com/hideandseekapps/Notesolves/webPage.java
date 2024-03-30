@@ -144,9 +144,6 @@ public class webPage extends AppCompatActivity {
         uid = getIntent().getStringExtra("uid");
         setInfo(uid);
 
-
-        PermissionManager permissionManager = PermissionManager.getInstance(this);
-        permissionManager.requestPermission(this,PermissionManager.PERMISSION_POST_NOTIFICATION);
     }
 
 
