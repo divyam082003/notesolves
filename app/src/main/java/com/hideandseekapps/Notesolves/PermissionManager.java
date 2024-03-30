@@ -25,7 +25,6 @@ public class PermissionManager extends Activity {
 
      void requestPermission(String permission){
         if(ActivityCompat.checkSelfPermission(context,permission)== PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(context, permission+" Granted", Toast.LENGTH_SHORT).show();
         }
         else {
             ActivityCompat.requestPermissions((Activity) this.context,new String[]{permission},PERMISSION_REQ_CODE);

@@ -112,9 +112,4 @@ public class launcher extends AppCompatActivity implements AppUpdateView {
         super.onResume();
         update();
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }
