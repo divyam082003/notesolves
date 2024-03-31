@@ -402,6 +402,8 @@ public class MainActivity extends AppCompatActivity {
 
         vCode = findViewById(R.id.vCode);
         vCode.setText("| v"+getAppVersionName(this));
+
+        setmain();
     }
 
 
