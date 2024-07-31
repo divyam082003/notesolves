@@ -6,17 +6,26 @@ plugins {
 
 android {
     namespace 'com.hideandseekapps.firebase_tut'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.hideandseekapps.firebase_tut"
         minSdk 24
-        targetSdk 33
-        versionCode 36
-        versionName "3.2"
+        targetSdk 34
+        versionCode 42
+        versionName "3.3.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    tasks.withType(JavaCompile).configureEach{
+        options.fork = true
+        options.forkOptions.jvmArgs +=[
+                '--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+                '--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+                '--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED']
+    }
+
 
     buildFeatures {
         viewBinding true
@@ -64,7 +73,7 @@ dependencies {
 
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha02'
 
-    implementation 'com.google.android.play:app-update:2.0.1'
+    implementation 'com.google.android.play:app-update:2.1.0'
     implementation 'com.google.firebase:firebase-config:21.5.0'
     implementation 'com.google.firebase:firebase-auth:21.1.0'
     implementation 'com.google.firebase:firebase-database:20.1.0'
