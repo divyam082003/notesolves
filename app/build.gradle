@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace 'com.hideandseekapps.firebase_tut'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.hideandseekapps.firebase_tut"
         minSdk 24
-        targetSdk 34
-        versionCode 42
-        versionName "3.3.0"
+        targetSdk 35
+        versionCode 43
+        versionName "3.3.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -82,7 +82,6 @@ dependencies {
 
 
     configurations.all{
-
         exclude group:'com.google.android.gms' , module: 'play-services-safetynet'
     }
 
