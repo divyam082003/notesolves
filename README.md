@@ -53,5 +53,13 @@ The app provides a simple, fast, and user-friendly way for students to explore s
 4. Reduced dependency on physical notes
 
 
+<div style="display: flex; justify-content: space-around; align-items: center;">
+  <img src="notesolves_screenshots/0.webp"  width="400px" height="200px">
+  <img src="notesolves_screenshots/a.webp"  width="200px" height="400px">
+  <img src="notesolves_screenshots/1.webp"  width="200px" height="400px">
+  <img src="notesolves_screenshots/2.webp"  width="200px" height="400px">
+  <img src="notesolves_screenshots/3.webp"  width="200px" height="400px">
+  <img src="notesolves_screenshots/4.webp"  width="200px" height="400px">
+</div>
 
 
